@@ -57,7 +57,7 @@ if you need more context — nothing else.
 - [x] **1. Compose skeleton** — `docker-compose.yml`, `nginx/default.conf`,
       empty `backend/` and `frontend/` service Dockerfiles that boot.
       _If you need the routing rationale:_ `docs/adr/0005-reverse-proxy.md`.
-- [ ] **2. Data layer** — SQLAlchemy models (`User`, `Ticket`,
+- [x] **2. Data layer** — SQLAlchemy models (`User`, `Ticket`,
       `StatusHistory`) + first Alembic migration + seed migration.
       _If you need the schema or seed rationale:_ `docs/adr/0002-database.md`,
       `ARCHITECTURE.md` §4.
