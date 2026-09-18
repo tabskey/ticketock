@@ -17,6 +17,9 @@ services:
     build: ./backend
     environment:
       DATABASE_URL: postgresql+psycopg://ticketock:ticketock@db:5432/ticketock
+    env_file:
+      - path: .env
+        required: false
     depends_on:
       db:
         condition: service_healthy

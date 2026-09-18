@@ -61,7 +61,7 @@ if you need more context — nothing else.
       `StatusHistory`) + first Alembic migration + seed migration.
       _If you need the schema or seed rationale:_ `docs/adr/0002-database.md`,
       `ARCHITECTURE.md` §4.
-- [ ] **3. Auth** — `/auth/login`, JWT issuance, `Depends`-based role
+- [x] **3. Auth** — `/auth/login`, JWT issuance, `Depends`-based role
       guards.
       _If you need the auth rationale:_ `docs/adr/0003-authentication.md`.
 - [ ] **4. Ticket endpoints** — CRUD + status transition + status

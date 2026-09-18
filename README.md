@@ -21,6 +21,11 @@ cd support-portal
 docker compose up --build
 ```
 
+Works out of the box with an insecure default JWT secret. For anything
+beyond a local demo, copy [`.env.example`](.env.example) to `.env` and
+set a real `JWT_SECRET_KEY` — `.env` is git-ignored, so it never gets
+committed.
+
 This starts four services: `nginx` (`http://localhost`), `frontend`,
 `backend`, and `db`. On first boot, run migrations (including the seed
 users) once the `backend` container is up:
@@ -106,6 +111,11 @@ git clone <repo-url>
 cd support-portal
 docker compose up --build
 ```
+
+Funciona de primeira com um segredo JWT padrão inseguro. Para qualquer
+uso além de uma demo local, copie [`.env.example`](.env.example) para
+`.env` e defina um `JWT_SECRET_KEY` de verdade — `.env` está no
+`.gitignore`, então nunca é commitado.
 
 Isso sobe quatro serviços: `nginx` (`http://localhost`), `frontend`,
 `backend` e `db`. Na primeira execução, rode as migrations (que incluem
