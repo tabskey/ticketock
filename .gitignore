@@ -221,4 +221,5 @@ __marimo__/
 node_modules/
 frontend/dist/
 npm-debug.log*
+*.tsbuildinfo
 
