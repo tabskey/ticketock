@@ -70,7 +70,7 @@ if you need more context — nothing else.
       _If you need the transition rule:_ `ARCHITECTURE.md` §4 (bottom).
 - [x] **5. Backend tests** — unit tests for `services/`, integration
       tests for every route, coverage check ≥ 80%.
-- [ ] **6. Frontend** — ticket list (filter/sort), ticket detail
+- [x] **6. Frontend** — ticket list (filter/sort), ticket detail
       (history), submission form, login screen. TanStack Query for all
       server state.
 - [ ] **7. Frontend tests** — component/hook tests with Vitest + RTL,
