@@ -64,11 +64,11 @@ if you need more context — nothing else.
 - [x] **3. Auth** — `/auth/login`, JWT issuance, `Depends`-based role
       guards.
       _If you need the auth rationale:_ `docs/adr/0003-authentication.md`.
-- [ ] **4. Ticket endpoints** — CRUD + status transition + status
+- [x] **4. Ticket endpoints** — CRUD + status transition + status
       history, per the contract.
       _If you need the exact contract:_ `ARCHITECTURE.md` §5.
       _If you need the transition rule:_ `ARCHITECTURE.md` §4 (bottom).
-- [ ] **5. Backend tests** — unit tests for `services/`, integration
+- [x] **5. Backend tests** — unit tests for `services/`, integration
       tests for every route, coverage check ≥ 80%.
 - [ ] **6. Frontend** — ticket list (filter/sort), ticket detail
       (history), submission form, login screen. TanStack Query for all

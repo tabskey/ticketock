@@ -4,10 +4,12 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.auth import router as auth_router
+from app.api.tickets import router as tickets_router
 from app.core.errors import AppError
 
 app = FastAPI(title="Ticketock API")
 app.include_router(auth_router, prefix="/api")
+app.include_router(tickets_router, prefix="/api")
 
 _HTTP_STATUS_CODES = {401: "UNAUTHORIZED", 403: "FORBIDDEN", 404: "NOT_FOUND"}
 
