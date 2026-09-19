@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './auth/RequireAuth'
 import { Layout } from './components/Layout'
 import { LoginPage } from './pages/LoginPage'
+import { HomePage } from './pages/HomePage'
 import { TicketListPage } from './pages/TicketListPage'
 import { TicketDetailPage } from './pages/TicketDetailPage'
 import { NewTicketPage } from './pages/NewTicketPage'
@@ -10,6 +11,14 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <HomePage />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/tickets"
         element={
@@ -40,7 +49,7 @@ function App() {
           </RequireAuth>
         }
       />
-      <Route path="*" element={<Navigate to="/tickets" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

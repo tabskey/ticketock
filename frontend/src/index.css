@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Nunito Sans', sans-serif;
+
+  --color-brand-amber: #f5a623;
+  --color-brand-amber-soft: #ffc862;
+  --color-brand-purple: #211d3f;
+  --color-brand-purple-dark: #0f0d22;
+  --color-brand-ink: #1a1730;
+  --color-brand-cream: #fbf7f0;
+  --color-brand-surface: #ffffff;
+  --color-brand-surface-alt: #f7f4ed;
+  --color-brand-border: #ece6d8;
+  --color-brand-border-dark: #2c2850;
+  --color-brand-surface-dark: #15132a;
+  --color-brand-surface-card-dark: #1e1b38;
+  --color-brand-surface-input-dark: #252143;
+  --color-brand-text: #f1eff8;
+  --color-brand-text-dark: #211d3f;
+  --color-brand-text-soft: #b7b2d6;
+  --color-brand-text-secondary: #8b87a0;
+  --color-brand-text-muted: #8d89ac;
+  --color-brand-pink: #ff7e9d;
+  --color-brand-alert: #e0522f;
+  --color-brand-gold: #e0921a;
+}
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+}

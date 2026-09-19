@@ -1,3 +1,4 @@
+import { Select } from './Select'
 import { TICKET_CATEGORIES, TICKET_PRIORITIES, TICKET_STATUSES } from '../types/ticket'
 import type { TicketCategory, TicketListParams, TicketPriority, TicketStatus } from '../types/ticket'
 
@@ -12,69 +13,65 @@ const selectClasses =
 export function TicketFilters({ params, onChange }: TicketFiltersProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <select
+      <Select
+        ariaLabel="Filter by status"
         className={selectClasses}
         value={params.status ?? ''}
-        onChange={(e) =>
-          onChange({ ...params, status: (e.target.value || undefined) as TicketStatus | undefined, page: 1 })
-        }
-      >
-        <option value="">All statuses</option>
-        {TICKET_STATUSES.map((status) => (
-          <option key={status} value={status}>
-            {status}
-          </option>
-        ))}
-      </select>
+        options={[
+          { value: '', label: 'All statuses' },
+          ...TICKET_STATUSES.map((status) => ({ value: status, label: status })),
+        ]}
+        onChange={(value) => onChange({ ...params, status: (value || undefined) as TicketStatus | undefined, page: 1 })}
+      />
 
-      <select
+      <Select
+        ariaLabel="Filter by category"
         className={selectClasses}
         value={params.category ?? ''}
-        onChange={(e) =>
-          onChange({ ...params, category: (e.target.value || undefined) as TicketCategory | undefined, page: 1 })
+        options={[
+          { value: '', label: 'All categories' },
+          ...TICKET_CATEGORIES.map((category) => ({ value: category, label: category })),
+        ]}
+        onChange={(value) =>
+          onChange({ ...params, category: (value || undefined) as TicketCategory | undefined, page: 1 })
         }
-      >
-        <option value="">All categories</option>
-        {TICKET_CATEGORIES.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+      />
 
-      <select
+      <Select
+        ariaLabel="Filter by priority"
         className={selectClasses}
         value={params.priority ?? ''}
-        onChange={(e) =>
-          onChange({ ...params, priority: (e.target.value || undefined) as TicketPriority | undefined, page: 1 })
+        options={[
+          { value: '', label: 'All priorities' },
+          ...TICKET_PRIORITIES.map((priority) => ({ value: priority, label: priority })),
+        ]}
+        onChange={(value) =>
+          onChange({ ...params, priority: (value || undefined) as TicketPriority | undefined, page: 1 })
         }
-      >
-        <option value="">All priorities</option>
-        {TICKET_PRIORITIES.map((priority) => (
-          <option key={priority} value={priority}>
-            {priority}
-          </option>
-        ))}
-      </select>
+      />
 
       <div className="ml-auto flex items-center gap-2">
-        <select
+        <Select
+          ariaLabel="Sort by"
           className={selectClasses}
           value={params.sort_by ?? 'created_at'}
-          onChange={(e) => onChange({ ...params, sort_by: e.target.value as TicketListParams['sort_by'] })}
-        >
-          <option value="created_at">Sort by date</option>
-          <option value="priority">Sort by priority</option>
-        </select>
+          options={[
+            { value: 'created_at', label: 'Sort by date' },
+            { value: 'priority', label: 'Sort by priority' },
+          ]}
+          onChange={(value) => onChange({ ...params, sort_by: value as TicketListParams['sort_by'] })}
+        />
 
-        <select
+        <Select
+          ariaLabel="Sort order"
           className={selectClasses}
           value={params.order ?? 'desc'}
-          onChange={(e) => onChange({ ...params, order: e.target.value as TicketListParams['order'] })}
-        >
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
-        </select>
+          options={[
+            { value: 'desc', label: 'Descending' },
+            { value: 'asc', label: 'Ascending' },
+          ]}
+          onChange={(value) => onChange({ ...params, order: value as TicketListParams['order'] })}
+        />
       </div>
     </div>
   )

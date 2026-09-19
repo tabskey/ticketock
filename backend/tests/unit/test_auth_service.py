@@ -1,24 +1,25 @@
 import pytest
 
 from app.core.errors import ForbiddenError, UnauthorizedError
+from app.core.security import create_access_token, create_refresh_token
 from app.models.enums import UserRole
 from app.models.user import User
-from app.services.auth_service import authenticate, ensure_role
+from app.services.auth_service import authenticate, ensure_role, refresh_session
 from tests.conftest import EMPLOYEE_EMAIL, EMPLOYEE_PASSWORD
 
 
 def test_ensure_role_allows_matching_role():
-    user = User(role=UserRole.SUPPORT)
+    user = User(name="Test User", role=UserRole.SUPPORT)
     ensure_role(user, {UserRole.SUPPORT})
 
 
 def test_ensure_role_allows_one_of_multiple_roles():
-    user = User(role=UserRole.EMPLOYEE)
+    user = User(name="Test User", role=UserRole.EMPLOYEE)
     ensure_role(user, {UserRole.EMPLOYEE, UserRole.SUPPORT})
 
 
 def test_ensure_role_rejects_other_role():
-    user = User(role=UserRole.EMPLOYEE)
+    user = User(name="Test User", role=UserRole.EMPLOYEE)
     with pytest.raises(ForbiddenError):
         ensure_role(user, {UserRole.SUPPORT})
 
@@ -37,3 +38,20 @@ def test_authenticate_wrong_password(db_session):
 def test_authenticate_unknown_email(db_session):
     with pytest.raises(UnauthorizedError):
         authenticate(db_session, "nobody@company.com", "whatever")
+
+
+def test_refresh_session_success(db_session, employee_user):
+    refresh_token = create_refresh_token(subject=str(employee_user.id), role=employee_user.role.value)
+    user = refresh_session(db_session, refresh_token)
+    assert user.id == employee_user.id
+
+
+def test_refresh_session_rejects_access_token(db_session, employee_user):
+    access_token = create_access_token(subject=str(employee_user.id), role=employee_user.role.value)
+    with pytest.raises(UnauthorizedError):
+        refresh_session(db_session, access_token)
+
+
+def test_refresh_session_rejects_garbage_token(db_session):
+    with pytest.raises(UnauthorizedError):
+        refresh_session(db_session, "garbage.token.value")

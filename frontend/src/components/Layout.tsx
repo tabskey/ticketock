@@ -15,7 +15,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link to="/tickets" className="text-lg font-semibold text-slate-900">
+          <Link to="/tickets" className="text-lg font-extrabold text-slate-900">
             Ticketock
           </Link>
           {auth && (
@@ -23,7 +23,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <span className="text-sm capitalize text-slate-500">{auth.role}</span>
               <Link
                 to="/tickets/new"
-                className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700"
+                className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-bold text-white hover:bg-slate-700"
               >
                 New ticket
               </Link>

@@ -30,19 +30,19 @@ def test_is_valid_transition(current, new, expected):
 
 
 def test_owner_employee_can_see_own_ticket():
-    employee = User(id=1, role=UserRole.EMPLOYEE)
+    employee = User(id=1, name="Test User", role=UserRole.EMPLOYEE)
     ticket = Ticket(created_by=1)
     assert ticket_service._is_hidden_from(ticket, employee) is False
 
 
 def test_other_employee_cannot_see_ticket():
-    employee = User(id=2, role=UserRole.EMPLOYEE)
+    employee = User(id=2, name="Test User", role=UserRole.EMPLOYEE)
     ticket = Ticket(created_by=1)
     assert ticket_service._is_hidden_from(ticket, employee) is True
 
 
 def test_support_can_see_any_ticket():
-    support = User(id=99, role=UserRole.SUPPORT)
+    support = User(id=99, name="Test User", role=UserRole.SUPPORT)
     ticket = Ticket(created_by=1)
     assert ticket_service._is_hidden_from(ticket, support) is False
 

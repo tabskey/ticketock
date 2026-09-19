@@ -67,6 +67,7 @@ def test_get_nonexistent_ticket_returns_not_found(client):
 def test_employee_cannot_view_another_employees_ticket(client, db_session):
     other_employee = User(
         email="other-employee@company.com",
+        name="Other Employee",
         hashed_password=hash_password("other123"),
         role=UserRole.EMPLOYEE,
     )
@@ -94,6 +95,7 @@ def test_support_can_view_any_ticket(client):
 def test_list_scopes_to_own_tickets_for_employee(client, db_session):
     other_employee = User(
         email="other-employee@company.com",
+        name="Other Employee",
         hashed_password=hash_password("other123"),
         role=UserRole.EMPLOYEE,
     )

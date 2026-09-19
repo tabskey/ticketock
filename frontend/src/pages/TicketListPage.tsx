@@ -23,7 +23,7 @@ export function TicketListPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">Tickets</h1>
+        <h1 className="text-xl font-bold text-slate-900">Tickets</h1>
       </div>
 
       <TicketFilters params={params} onChange={setParams} />
@@ -54,7 +54,7 @@ export function TicketListPage() {
               {data.items.map((ticket) => (
                 <tr key={ticket.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
-                    <Link to={`/tickets/${ticket.id}`} className="font-medium text-slate-900 hover:underline">
+                    <Link to={`/tickets/${ticket.id}`} className="font-bold text-slate-900 hover:underline">
                       {ticket.title}
                     </Link>
                   </td>

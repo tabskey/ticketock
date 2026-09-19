@@ -31,8 +31,8 @@ export function TicketDetailPage() {
       <div className="rounded-lg border border-slate-200 bg-white p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-semibold text-slate-900">{ticket.title}</h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <h1 className="text-xl font-bold text-slate-900">{ticket.title}</h1>
+            <p className="mt-1 text-sm font-medium text-slate-500">
               #{ticket.id} · {ticket.category} · opened {new Date(ticket.created_at).toLocaleString()}
             </p>
           </div>
@@ -49,7 +49,7 @@ export function TicketDetailPage() {
             <button
               onClick={() => updateStatus.mutate(upcoming)}
               disabled={updateStatus.isPending}
-              className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+              className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-bold text-white hover:bg-slate-700 disabled:opacity-60"
             >
               {updateStatus.isPending ? 'Updating…' : `Move to ${upcoming}`}
             </button>
@@ -63,7 +63,7 @@ export function TicketDetailPage() {
       </div>
 
       <div className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">History</h2>
+        <h2 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-500">History</h2>
         <ol className="space-y-3">
           {ticket.history.map((entry) => (
             <li key={entry.id} className="flex items-center gap-3 text-sm">

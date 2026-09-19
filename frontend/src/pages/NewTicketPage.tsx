@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCreateTicket } from '../hooks/useCreateTicket'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { Select } from '../components/Select'
 import { TICKET_CATEGORIES, TICKET_PRIORITIES } from '../types/ticket'
 import type { TicketCategory, TicketPriority } from '../types/ticket'
 
@@ -26,7 +27,7 @@ export function NewTicketPage() {
 
   return (
     <div className="mx-auto max-w-lg space-y-6">
-      <h1 className="text-xl font-semibold text-slate-900">Submit a ticket</h1>
+      <h1 className="text-xl font-bold text-slate-900">Submit a ticket</h1>
 
       <form className="space-y-4 rounded-lg border border-slate-200 bg-white p-6" onSubmit={handleSubmit}>
         <div>
@@ -62,36 +63,26 @@ export function NewTicketPage() {
             <label htmlFor="category" className="mb-1 block text-sm font-medium text-slate-700">
               Category
             </label>
-            <select
+            <Select
               id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as TicketCategory)}
               className={inputClasses}
-            >
-              {TICKET_CATEGORIES.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              value={category}
+              options={TICKET_CATEGORIES.map((option) => ({ value: option, label: option }))}
+              onChange={(value) => setCategory(value)}
+            />
           </div>
 
           <div>
             <label htmlFor="priority" className="mb-1 block text-sm font-medium text-slate-700">
               Priority
             </label>
-            <select
+            <Select
               id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as TicketPriority)}
               className={inputClasses}
-            >
-              {TICKET_PRIORITIES.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              value={priority}
+              options={TICKET_PRIORITIES.map((option) => ({ value: option, label: option }))}
+              onChange={(value) => setPriority(value)}
+            />
           </div>
         </div>
 
@@ -100,7 +91,7 @@ export function NewTicketPage() {
         <button
           type="submit"
           disabled={createTicket.isPending}
-          className="w-full rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+          className="w-full rounded-md bg-slate-900 px-3 py-2 text-sm font-bold text-white hover:bg-slate-700 disabled:opacity-60"
         >
           {createTicket.isPending ? 'Submitting…' : 'Submit ticket'}
         </button>

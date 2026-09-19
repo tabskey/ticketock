@@ -9,7 +9,7 @@ const STYLES: Record<TicketPriority, string> = {
 
 export function PriorityBadge({ priority }: { priority: TicketPriority }) {
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${STYLES[priority]}`}>
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${STYLES[priority]}`}>
       {priority}
     </span>
   )
