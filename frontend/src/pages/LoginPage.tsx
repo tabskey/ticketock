@@ -164,7 +164,7 @@ export function LoginPage() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 rounded border-brand-border text-brand-amber focus:ring-brand-amber dark:border-brand-border-dark"
               />
-              Lembrar de mim
+              <span>Lembrar de mim</span>
             </label>
 
             {error ? <ErrorMessage error={error} /> : null}

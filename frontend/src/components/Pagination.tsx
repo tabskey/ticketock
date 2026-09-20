@@ -1,3 +1,5 @@
+import { SECONDARY_BUTTON_CLASSES } from '../lib/brandUi'
+
 interface PaginationProps {
   page: number
   pageSize: number
@@ -9,24 +11,16 @@ export function Pagination({ page, pageSize, total, onPageChange }: PaginationPr
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
   return (
-    <div className="flex items-center justify-between text-sm text-slate-600">
+    <div className="flex items-center justify-between text-[13px] text-brand-text-secondary dark:text-brand-text-muted">
       <span>
-        Page {page} of {totalPages} ({total} tickets)
+        Página {page} de {totalPages} ({total} tickets)
       </span>
       <div className="flex gap-2">
-        <button
-          className="rounded-md border border-slate-300 px-3 py-1.5 font-bold disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={page <= 1}
-          onClick={() => onPageChange(page - 1)}
-        >
-          Previous
+        <button className={SECONDARY_BUTTON_CLASSES} disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
+          Anterior
         </button>
-        <button
-          className="rounded-md border border-slate-300 px-3 py-1.5 font-bold disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={page >= totalPages}
-          onClick={() => onPageChange(page + 1)}
-        >
-          Next
+        <button className={SECONDARY_BUTTON_CLASSES} disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
+          Próxima
         </button>
       </div>
     </div>

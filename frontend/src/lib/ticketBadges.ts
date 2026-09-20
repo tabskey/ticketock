@@ -1,9 +1,8 @@
 import type { TicketCategory, TicketPriority, TicketStatus } from '../types/ticket'
 
-// Portuguese labels + colors matching design-reference/home.html's mockup palette.
-// Intentionally local to the home page and independent from components/StatusBadge.tsx
-// and components/PriorityBadge.tsx (which use English labels/generic colors for the
-// ticket list/detail pages) — do not merge without a deliberate decision.
+// Single source of truth for PT-BR labels + brand colors for ticket
+// category/priority/status, shared by every page that renders a ticket
+// (Home, ticket list, ticket detail, new-ticket forms).
 
 export const CATEGORY_BADGE_CLASS =
   'bg-status-neutral-bg text-status-neutral-text dark:bg-status-neutral-bg-dark dark:text-status-neutral-text-dark'
@@ -12,6 +11,13 @@ export const CATEGORY_LABEL_PT: Record<TicketCategory, string> = {
   IT: 'TI',
   Facilities: 'Instalações',
   HR: 'RH',
+}
+
+export const PRIORITY_LABEL_PT: Record<TicketPriority, string> = {
+  Low: 'Baixa',
+  Medium: 'Média',
+  High: 'Alta',
+  Urgent: 'Urgente',
 }
 
 export const PRIORITY_STYLE_PT: Record<TicketPriority, { label: string; className: string }> = {

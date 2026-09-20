@@ -13,11 +13,34 @@ interface SelectProps<T extends string> {
   onChange: (value: T) => void
   className?: string
   ariaLabel?: string
+  variant?: 'default' | 'brand'
 }
 
 const BASE_TRIGGER_CLASSES = 'inline-flex items-center justify-between gap-2 text-left'
 
-function ChevronDownIcon() {
+const CHEVRON_CLASSES: Record<'default' | 'brand', string> = {
+  default: 'h-3.5 w-3.5 flex-none text-slate-400',
+  brand: 'h-3.5 w-3.5 flex-none text-brand-text-secondary dark:text-brand-text-muted',
+}
+
+const LIST_CLASSES: Record<'default' | 'brand', string> = {
+  default: 'absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md border border-slate-300 bg-white py-1 text-sm shadow-lg',
+  brand:
+    'absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-xl border border-brand-border bg-brand-surface py-1 text-sm shadow-lg dark:border-brand-border-dark dark:bg-brand-surface-card-dark',
+}
+
+function optionClasses(variant: 'default' | 'brand', isHighlighted: boolean, isSelected: boolean): string {
+  if (variant === 'brand') {
+    return `cursor-pointer whitespace-nowrap px-3 py-1.5 ${isHighlighted ? 'bg-brand-surface-alt dark:bg-brand-surface-input-dark' : ''} ${
+      isSelected ? 'font-medium text-brand-text-dark dark:text-brand-text' : 'text-brand-text-secondary dark:text-brand-text-muted'
+    }`
+  }
+  return `cursor-pointer whitespace-nowrap px-3 py-1.5 ${isHighlighted ? 'bg-slate-100' : ''} ${
+    isSelected ? 'font-medium text-slate-900' : 'text-slate-700'
+  }`
+}
+
+function ChevronDownIcon({ variant }: { variant: 'default' | 'brand' }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -26,7 +49,7 @@ function ChevronDownIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-3.5 w-3.5 flex-none text-slate-400"
+      className={CHEVRON_CLASSES[variant]}
     >
       <polyline points="6 9 12 15 18 9" />
     </svg>
@@ -37,7 +60,15 @@ function ChevronDownIcon() {
 // which cannot be styled with CSS/Tailwind. This is a from-scratch replacement
 // (button + listbox) so the whole control can be themed, with roughly the
 // same keyboard/click behavior as a native select.
-export function Select<T extends string>({ id, value, options, onChange, className, ariaLabel }: SelectProps<T>) {
+export function Select<T extends string>({
+  id,
+  value,
+  options,
+  onChange,
+  className,
+  ariaLabel,
+  variant = 'default',
+}: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -86,7 +117,10 @@ export function Select<T extends string>({ id, value, options, onChange, classNa
         else openDropdown()
         break
       case 'Escape':
-        setIsOpen(false)
+        if (isOpen) {
+          event.stopPropagation()
+          setIsOpen(false)
+        }
         break
     }
   }
@@ -106,14 +140,11 @@ export function Select<T extends string>({ id, value, options, onChange, classNa
         onKeyDown={handleKeyDown}
       >
         <span>{selectedLabel}</span>
-        <ChevronDownIcon />
+        <ChevronDownIcon variant={variant} />
       </button>
 
       {isOpen && (
-        <ul
-          role="listbox"
-          className="absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md border border-slate-300 bg-white py-1 text-sm shadow-lg"
-        >
+        <ul role="listbox" className={LIST_CLASSES[variant]}>
           {options.map((option, index) => (
             <li
               key={option.value}
@@ -121,9 +152,7 @@ export function Select<T extends string>({ id, value, options, onChange, classNa
               aria-selected={option.value === value}
               onMouseEnter={() => setHighlightedIndex(index)}
               onClick={() => commitSelection(index)}
-              className={`cursor-pointer whitespace-nowrap px-3 py-1.5 ${index === highlightedIndex ? 'bg-slate-100' : ''} ${
-                option.value === value ? 'font-medium text-slate-900' : 'text-slate-700'
-              }`}
+              className={optionClasses(variant, index === highlightedIndex, option.value === value)}
             >
               {option.label}
             </li>

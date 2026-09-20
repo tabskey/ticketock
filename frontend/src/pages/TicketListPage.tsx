@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useTickets } from '../hooks/useTickets'
 import { TicketFilters } from '../components/TicketFilters'
 import { Pagination } from '../components/Pagination'
-import { StatusBadge } from '../components/StatusBadge'
-import { PriorityBadge } from '../components/PriorityBadge'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { TicketRow } from '../components/TicketRow'
+import { ERROR_CLASSES } from '../lib/brandUi'
 import type { TicketListParams } from '../types/ticket'
 
 const PAGE_SIZE = 20
@@ -22,56 +21,36 @@ export function TicketListPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-900">Tickets</h1>
-      </div>
+      <h1 className="text-xl font-extrabold text-brand-text-dark dark:text-brand-text">Meus tickets</h1>
 
       <TicketFilters params={params} onChange={setParams} />
 
-      {isError && <ErrorMessage error={error} />}
+      {isError && <ErrorMessage error={error} className={ERROR_CLASSES} />}
 
-      {isLoading && !data && <p className="text-sm text-slate-500">Loading tickets…</p>}
+      {isLoading && !data && (
+        <div className="flex flex-col gap-2.5">
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-[70px] animate-pulse rounded-2xl border border-brand-border bg-brand-surface dark:border-brand-border-dark dark:bg-brand-surface-card-dark"
+            />
+          ))}
+        </div>
+      )}
 
       {data && data.items.length === 0 && (
-        <p className="rounded-md border border-dashed border-slate-300 py-8 text-center text-sm text-slate-500">
-          No tickets match these filters.
-        </p>
+        <div className="rounded-2xl border border-brand-border bg-brand-surface p-8 text-center dark:border-brand-border-dark dark:bg-brand-surface-card-dark">
+          <p className="text-[14.5px] text-brand-text-secondary dark:text-brand-text-muted">
+            Nenhum ticket encontrado com esses filtros.
+          </p>
+        </div>
       )}
 
       {data && data.items.length > 0 && (
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-          <table className="min-w-full divide-y divide-slate-200 text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-              <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Category</th>
-                <th className="px-4 py-3">Priority</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Created</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {data.items.map((ticket) => (
-                <tr key={ticket.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3">
-                    <Link to={`/tickets/${ticket.id}`} className="font-bold text-slate-900 hover:underline">
-                      {ticket.title}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 text-slate-600">{ticket.category}</td>
-                  <td className="px-4 py-3">
-                    <PriorityBadge priority={ticket.priority} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={ticket.status} />
-                  </td>
-                  <td className="px-4 py-3 text-slate-500">
-                    {new Date(ticket.created_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="flex flex-col gap-2.5">
+          {data.items.map((ticket) => (
+            <TicketRow key={ticket.id} ticket={ticket} />
+          ))}
         </div>
       )}
 
