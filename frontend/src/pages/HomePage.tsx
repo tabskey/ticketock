@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react'
+import { Moon, Sun } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { HomeSidebar } from '../components/HomeSidebar'
 import { ErrorMessage } from '../components/ErrorMessage'
@@ -6,34 +7,11 @@ import { useCurrentUser } from '../hooks/useCurrentUser'
 import { useTickets } from '../hooks/useTickets'
 import { useTheme } from '../hooks/useTheme'
 import { getInitials } from '../lib/initials'
+import ticketTockHero from '../assets/item3_gato_notebook.png'
 import { CATEGORY_BADGE_CLASS, CATEGORY_LABEL_PT, PRIORITY_STYLE_PT, STATUS_STYLE_PT, formatTicketMeta } from './homeBadges'
 
 function iconProps(props: SVGProps<SVGSVGElement>): SVGProps<SVGSVGElement> {
   return { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', ...props }
-}
-
-function SunIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...iconProps(props)}>
-      <circle cx="12" cy="12" r="5" />
-      <line x1="12" y1="1" x2="12" y2="3" />
-      <line x1="12" y1="21" x2="12" y2="23" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="1" y1="12" x2="3" y2="12" />
-      <line x1="21" y1="12" x2="23" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-    </svg>
-  )
-}
-
-function MoonIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...iconProps(props)}>
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  )
 }
 
 function BellIcon(props: SVGProps<SVGSVGElement>) {
@@ -84,11 +62,7 @@ export function HomePage() {
             aria-label="Alternar tema"
             className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-brand-border bg-brand-surface dark:border-brand-border-dark dark:bg-brand-surface-card-dark"
           >
-            {theme === 'dark' ? (
-              <SunIcon className="h-[17px] w-[17px] text-brand-text" />
-            ) : (
-              <MoonIcon className="h-[17px] w-[17px] text-brand-text-dark" />
-            )}
+            {theme === 'dark' ? <Sun className="h-[17px] w-[17px] text-brand-text" /> : <Moon className="h-[17px] w-[17px] text-brand-text-dark" />}
           </button>
           <span className="relative flex h-[38px] w-[38px] items-center justify-center rounded-full border border-brand-border bg-brand-surface dark:border-brand-border-dark dark:bg-brand-surface-card-dark">
             <span className="absolute right-[9px] top-[8px] h-[7px] w-[7px] rounded-full bg-brand-alert" />
@@ -100,7 +74,7 @@ export function HomePage() {
         </div>
 
         <div className="flex items-center justify-between gap-6 rounded-[22px] border border-brand-border bg-brand-surface px-[34px] py-[30px] shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]">
-          <div>
+          <div className="flex-1">
             <h1 className="mb-1.5 text-[26px] font-extrabold text-brand-text-dark dark:text-brand-text">
               {user ? `Oi, ${user.name}! 👋` : 'Oi! 👋'}
             </h1>
@@ -113,11 +87,17 @@ export function HomePage() {
               Abrir chamado
             </Link>
           </div>
+
+          <img
+            src={ticketTockHero}
+            alt="TicketTock mascot"
+            className="hidden h-36 w-36 object-contain md:block"
+          />
         </div>
 
         <div className="mb-3.5 mt-[30px] flex items-baseline justify-between px-0.5">
           <h2 className="text-[17px] font-extrabold text-brand-text-dark dark:text-brand-text">Seus chamados recentes</h2>
-          <Link to="/tickets" className="text-[13.5px] font-bold text-brand-gold dark:text-[#FFC155]">
+          <Link to="/tickets" className="text-[13.5px] font-bold text-brand-gold dark:text-brand-amber-soft">
             Ver todos →
           </Link>
         </div>

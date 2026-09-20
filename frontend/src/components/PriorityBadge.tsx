@@ -1,10 +1,10 @@
 import type { TicketPriority } from '../types/ticket'
 
 const STYLES: Record<TicketPriority, string> = {
-  Low: 'bg-slate-100 text-slate-600',
-  Medium: 'bg-sky-100 text-sky-700',
-  High: 'bg-orange-100 text-orange-700',
-  Urgent: 'bg-red-100 text-red-700',
+  Low: 'bg-[#DFF3E6] text-[#1E8A55] dark:bg-[#173A2A] dark:text-[#5AD196]',
+  Medium: 'bg-[#FDF0D8] text-[#B4740E] dark:bg-[#3A2E17] dark:text-[#F0B74A]',
+  High: 'bg-[#FCE4E4] text-[#C0392B] dark:bg-[#3A2030] dark:text-[#F17E7E]',
+  Urgent: 'bg-[#F7D6E4] text-[#9C1750] dark:bg-[#3A1A2A] dark:text-[#F17EB0]',
 }
 
 export function PriorityBadge({ priority }: { priority: TicketPriority }) {

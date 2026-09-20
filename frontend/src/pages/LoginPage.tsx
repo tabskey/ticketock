@@ -44,7 +44,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-cream transition-colors dark:bg-brand-surface-dark md:flex-row">
+    <div className="relative flex min-h-screen flex-col bg-brand-cream transition-colors dark:bg-brand-surface-dark md:flex-row">
       <button
         type="button"
         onClick={toggleTheme}
@@ -54,57 +54,56 @@ export function LoginPage() {
         {theme === 'dark' ? <Sun className="h-5 w-5 text-brand-text" /> : <Moon className="h-5 w-5 text-brand-text-dark" />}
       </button>
 
-      <div className="dune-container sky relative flex h-56 flex-col justify-between p-5 text-brand-text-dark dark:text-brand-text md:h-auto md:flex-1 md:p-14">
-        <div className="stars" />
+      <div className="absolute inset-0 md:contents">
+        <div className="dune-container sky relative flex h-full flex-col justify-between p-5 text-brand-text-dark dark:text-brand-text md:h-auto md:flex-1 md:p-14">
+          <div className="stars" />
 
-        <div className="dune dune-1 dune--peak-left" />
-        <div className="dune dune-2 dune--peak-right" />
-        <div className="dune dune-3 dune--peak-left" />
-        <div className="dune dune-4 dune--peak-right" />
+          <div className="dune dune-1 dune--peak-left" />
+          <div className="dune dune-2 dune--peak-right" />
+          <div className="dune dune-3 dune--peak-left" />
+          <div className="dune dune-4 dune--peak-right" />
 
-        <div className="sand-grain" />
+          <div className="sand-grain" />
 
-        <div className="relative z-10 flex flex-1 items-center justify-center">
-
-          {/* Estrela brilhante — só no dark, com glow e pulsar */}
-          <Sparkle
-            aria-hidden="true"
-            className="absolute right-[9%] top-[9%] hidden h-6 w-6 animate-pulse fill-white text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.85)] dark:block"
-          />
-
-          {/* Versão discreta pro light — só a cor da marca, sem glow */}
-          <Sparkle
-            aria-hidden="true"
-            className="absolute right-[9%] top-[9%] block h-5 w-5 fill-brand-amber text-brand-amber opacity-70 dark:hidden"
-          />
-
-          <div className="absolute right-[11%] top-[12%] hidden max-w-[150px] rounded-[14px_2px_14px_14px] bg-brand-text px-3.5 py-2.5 text-[11.5px] font-bold text-brand-text-dark shadow-[0_8px_20px_rgba(0,0,0,0.2)] md:block">
-            Um miado de distância da solução.🐾
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center">
-            <p className="mb-1 text-center text-3xl font-medium font-fredoka text-brand-purple dark:text-brand-text md:text-7xl">
-              <span className="font-bold text-brand-amber">T</span>icket<span className="font-bold text-brand-amber">T</span>ock
-            </p>
-
-            <p className="mb-3 hidden max-w-[280px] text-center text-[15px] text-brand-text-secondary dark:text-brand-text-soft md:block">
-              Todo chamado merece uma patinha amiga.
-            </p>
-
-            <img
-              src={ticketMascot}
-              alt=""
-              className="h-20 w-20 object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.25)] md:h-[400px] md:w-[400px]"
+          <div className="relative z-10 flex flex-1 items-start justify-center md:items-center">
+            <Sparkle
+              aria-hidden="true"
+              className="absolute right-[9%] top-[9%] hidden h-6 w-6 animate-pulse fill-white text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.85)] dark:block"
             />
-          </div>
-        </div>
 
-        <div />
+            <Sparkle
+              aria-hidden="true"
+              className="absolute right-[9%] top-[9%] block h-5 w-5 fill-brand-amber text-brand-amber opacity-70 dark:hidden"
+            />
+
+            <div className="absolute right-[11%] top-[12%] hidden max-w-[150px] rounded-[14px_2px_14px_14px] bg-brand-text px-3.5 py-2.5 text-[11.5px] font-bold text-brand-text-dark shadow-[0_8px_20px_rgba(0,0,0,0.2)] md:block">
+              Um miado de distância da solução.🐾
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center">
+              <p className="mb-1 text-center text-3xl font-medium font-fredoka text-brand-purple dark:text-brand-text md:text-7xl">
+                <span className="font-bold text-brand-amber">T</span>icket<span className="font-bold text-brand-amber">T</span>ock
+              </p>
+
+              <p className="mb-3 hidden max-w-[280px] text-center text-[15px] text-brand-text-secondary dark:text-brand-text-soft md:block">
+                Todo chamado merece uma patinha amiga.
+              </p>
+
+              <img
+                src={ticketMascot}
+                alt=""
+                className="h-32 w-32 object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.25)] md:h-[400px] md:w-[400px]"
+              />
+            </div>
+          </div>
+
+          <div />
+        </div>
       </div>
 
-      <div className="flex flex-1 items-center justify-center px-6 py-8 md:py-10 md:shadow-[inset_60px_0_60px_-40px_rgba(122,66,31,0.35)] md:dark:shadow-[inset_60px_0_60px_-40px_rgba(0,0,0,0.6)]">
-        <div className="w-full max-w-sm">
-          <img src={welcomeMascot} alt="" className="mx-auto mb-3 h-24 w-24 object-contain" />
+      <div className="relative z-10 flex flex-1 items-center justify-center px-4 pb-8 md:px-6 md:py-10 md:shadow-[inset_60px_0_60px_-40px_rgba(122,66,31,0.35)] md:dark:shadow-[inset_60px_0_60px_-40px_rgba(0,0,0,0.6)]">
+        <div className="w-full max-w-sm rounded-[28px] border border-white/35 bg-[linear-gradient(180deg,rgba(255,249,240,0.20),rgba(255,236,208,0.10),rgba(212,167,109,0.08))] p-5 shadow-[0_18px_48px_rgba(33,29,63,0.18)] backdrop-blur-md dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(17,16,33,0.45),rgba(41,33,66,0.35),rgba(95,64,42,0.22))] md:border md:border-brand-border md:bg-brand-surface md:p-10 md:shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] md:backdrop-blur-none md:dark:border-brand-border-dark md:dark:bg-brand-surface-card-dark md:dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]">
+          <img src={welcomeMascot} alt="" className="mx-auto mb-3 hidden h-24 w-24 object-contain md:block" />
 
           <h1 className="mb-1.5 text-[30px] font-extrabold text-brand-text-dark dark:text-brand-text">Bem-vindo(a)!</h1>
           <p className="mb-8 text-[15px] font-medium text-brand-text-secondary dark:text-brand-text-muted">

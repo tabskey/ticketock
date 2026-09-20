@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --font-fredoka: "Fredoka", sans-serif;
   --font-sans: 'Nunito Sans', sans-serif;
 
   --color-brand-amber: #f5a623;
@@ -26,8 +29,135 @@
   --color-brand-pink: #ff7e9d;
   --color-brand-alert: #e0522f;
   --color-brand-gold: #e0921a;
+
+  --color-status-neutral-bg: #eeebf3;
+  --color-status-neutral-bg-dark: #282450;
+  --color-status-neutral-text: #7a7690;
+  --color-status-neutral-text-dark: #a8a4c4;
+
+  --color-status-success-bg: #dff3e6;
+  --color-status-success-bg-dark: #173a2a;
+  --color-status-success-text: #1e8a55;
+  --color-status-success-text-dark: #5ad196;
+
+  --color-status-warning-bg: #fdf0d8;
+  --color-status-warning-bg-dark: #3a2e17;
+  --color-status-warning-text: #b4740e;
+  --color-status-warning-text-dark: #f0b74a;
+
+  --color-status-warning-soft-bg: #fce7d0;
+  --color-status-warning-soft-bg-dark: #3a2717;
+  --color-status-warning-soft-text: #c1650e;
+  --color-status-warning-soft-text-dark: #f0a15c;
+
+  --color-status-info-bg: #deeafb;
+  --color-status-info-bg-dark: #1b2c4a;
+  --color-status-info-text: #2a5fc1;
+  --color-status-info-text-dark: #7da9f5;
+
+  --color-status-danger-bg: #fce4e4;
+  --color-status-danger-bg-dark: #3a2030;
+  --color-status-danger-text: #c0392b;
+  --color-status-danger-text-dark: #f17e7e;
+
+  --color-status-urgent-bg: #f7d6e4;
+  --color-status-urgent-bg-dark: #3a1a2a;
+  --color-status-urgent-text: #9c1750;
+  --color-status-urgent-text-dark: #f17eb0;
 }
 
 body {
   font-family: 'Nunito Sans', sans-serif;
 }
+
+.font-fredoka {
+  font-family: 'Fredoka', sans-serif;
+}
+
+.dune-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.sky {
+  background: linear-gradient(to bottom, #fef8ef 0%, #fdebce 35%, #fcd79c 60%, #f5e2d6 85%, #eac5ae 100%);
+  transition: background 0.5s ease;
+}
+.dark .sky {
+  background: linear-gradient(to bottom, #131221 0%, #272541 35%, #3a3762 60%, #512c15 85%, #29160a 100%);
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 10%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 80% 25%, #fff, transparent),
+    radial-gradient(1px 1px at 35% 35%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 50% 15%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 8%, #fff, transparent);
+}
+.dark .stars {
+  opacity: 0.7;
+}
+
+.sand-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: radial-gradient(circle, #000 1px, transparent 1px);
+  background-size: 6px 6px;
+  pointer-events: none;
+}
+.dark .sand-grain {
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+}
+
+.dune {
+  position: absolute;
+  left: 0;
+  bottom: var(--dune-bottom, -20%);
+  width: 100%;
+  height: var(--dune-height, 55%);
+  background-color: var(--dune-color, darkorange);
+  animation: grow var(--dune-duration, 6s) ease-in-out infinite alternate;
+  transition: background-color 0.5s ease;
+}
+.dune::before {
+  content: '';
+  position: absolute;
+  bottom: var(--dune-bottom, -20%);
+  width: 160%;
+  height: 110%;
+  background-color: inherit;
+  animation: inherit;
+}
+
+.dune--peak-right { border-top-right-radius: 0; border-top-left-radius: 100%; }
+.dune--peak-right::before { left: -20%; border-top-right-radius: 100%; border-top-left-radius: 0; }
+
+.dune--peak-left { border-top-left-radius: 0; border-top-right-radius: 100%; right: 0; left: auto; }
+.dune--peak-left::before { right: -20%; border-top-left-radius: 100%; border-top-right-radius: 0; }
+
+@keyframes grow {
+  0%   { bottom: calc(var(--dune-bottom, -20%) - 2%); }
+  100% { bottom: var(--dune-bottom, -20%); }
+}
+
+/* Light */
+.dune-1 { --dune-color: #eac5ae; --dune-height: 42%; --dune-bottom: -14%; --dune-duration: 9s; z-index: 1; opacity: .85; }
+.dune-2 { --dune-color: #d58b5d; --dune-height: 40%; --dune-bottom: -18%; --dune-duration: 8s; z-index: 2; opacity: .92; }
+.dune-3 { --dune-color: #a2582a; --dune-height: 38%; --dune-bottom: -22%; --dune-duration: 7s; z-index: 3; }
+.dune-4 { --dune-color: #7a421f; --dune-height: 40%; --dune-bottom: -28%; --dune-duration: 6s; z-index: 4; }
+
+/* Dark */
+.dark .dune-1 { --dune-color: #575975; }
+.dark .dune-2 { --dune-color: #414358; }
+.dark .dune-3 { --dune-color: #272541; }
+.dark .dune-4 { --dune-color: #131221; }

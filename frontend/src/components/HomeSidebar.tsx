@@ -1,4 +1,6 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
+import ticketTockLogoMini from '../assets/item7_rosto_brilho.png'
 import type { CurrentUser } from '../types/user'
 
 const ROLE_LABEL_PT: Record<CurrentUser['role'], string> = {
@@ -14,15 +16,22 @@ function navItemClass(isActive: boolean): string {
 }
 
 export function HomeSidebar({ user }: { user: CurrentUser | undefined }) {
+  const navigate = useNavigate()
+  const { signOut } = useAuth()
   const roleLabel = user ? ROLE_LABEL_PT[user.role] : ''
+
+  function handleLogout() {
+    signOut()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <div className="sticky top-0 flex h-screen w-[230px] shrink-0 flex-col bg-brand-purple px-[18px] py-[26px] dark:bg-brand-purple-dark">
       <div className="flex items-center gap-2.5 px-1.5 pb-7 text-[19px] font-extrabold text-brand-text">
         <img
-          src="https://placehold.co/32x32/f5a623/1a1730?text=TT"
+          src={ticketTockLogoMini}
           alt="TicketTock logo"
-          className="h-8 w-8 flex-none rounded-[9px] object-cover"
+          className="h-14 w-14 flex-none rounded-[9px] object-contain"
         />
         TicketTock
       </div>
@@ -44,16 +53,31 @@ export function HomeSidebar({ user }: { user: CurrentUser | undefined }) {
         Meus tickets
       </NavLink>
 
-      <div className="mt-auto flex items-center gap-2.5 border-t border-white/[0.08] px-1.5 pt-3">
-        <img
-          src="https://placehold.co/36x36/ff7e9d/f1eff8?text=U"
-          alt={user?.name ?? 'User avatar'}
-          className="h-9 w-9 flex-none rounded-full object-cover"
-        />
-        <div className="min-w-0">
-          <div className="truncate text-[13.5px] font-extrabold text-brand-text">{user?.name ?? ''}</div>
-          <div className="text-xs text-brand-text-soft dark:text-brand-text-muted">{roleLabel}</div>
+      <div className="mt-auto flex flex-col gap-3 border-t border-white/[0.08] px-1.5 pt-3">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="https://placehold.co/36x36/ff7e9d/f1eff8?text=U"
+            alt={user?.name ?? 'User avatar'}
+            className="h-9 w-9 flex-none rounded-full object-cover"
+          />
+          <div className="min-w-0">
+            <div className="truncate text-[13.5px] font-extrabold text-brand-text">{user?.name ?? ''}</div>
+            <div className="text-xs text-brand-text-soft dark:text-brand-text-muted">{roleLabel}</div>
+          </div>
         </div>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[13px] font-bold text-brand-text transition hover:bg-white/10"
+        >
+          <img
+            src="https://placehold.co/14x14/b7b2d6/211d3f?text=O"
+            alt="Logout"
+            className="h-[14px] w-[14px] rounded-sm object-cover"
+          />
+          Logout
+        </button>
       </div>
     </div>
   )
