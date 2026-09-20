@@ -1,6 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import ticketTockLogoMini from '../assets/item7_rosto_brilho.png'
+import ticketTockTicket from '../assets/item8_bilhete.png'
+import ticketTockIconHome from '../assets/item5_rosto_piscando.png'
 import type { CurrentUser } from '../types/user'
 
 const ROLE_LABEL_PT: Record<CurrentUser['role'], string> = {
@@ -31,24 +33,24 @@ export function HomeSidebar({ user }: { user: CurrentUser | undefined }) {
         <img
           src={ticketTockLogoMini}
           alt="TicketTock logo"
-          className="h-14 w-14 flex-none rounded-[9px] object-contain"
+          className="h-18 w-18 flex-none rounded-[9px] object-contain"
         />
         TicketTock
       </div>
 
       <NavLink to="/" end className={({ isActive }) => `${navItemClass(isActive)} mb-1.5`}>
         <img
-          src="https://placehold.co/18x18/b7b2d6/211d3f?text=H"
+          src={ticketTockIconHome}
           alt="Início"
-          className="h-[18px] w-[18px] flex-none rounded-sm object-cover"
+          className="h-10 w-10 flex-none rounded-[9px] object-contain"
         />
         Início
       </NavLink>
       <NavLink to="/tickets" className={({ isActive }) => navItemClass(isActive)}>
         <img
-          src="https://placehold.co/18x18/b7b2d6/211d3f?text=T"
+          src={ticketTockTicket}
           alt="Meus tickets"
-          className="h-[18px] w-[18px] flex-none rounded-sm object-cover"
+          className="h-10 w-10 flex-none rounded-[9px] object-contain"
         />
         Meus tickets
       </NavLink>
