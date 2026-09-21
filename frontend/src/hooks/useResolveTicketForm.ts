@@ -14,8 +14,12 @@ export function useResolveTicketForm({ ticketId, onSuccess }: UseResolveTicketFo
 
   async function handleSubmit(event: FormEvent): Promise<void> {
     event.preventDefault()
-    await updateStatus.mutateAsync({ status: 'Resolved', resolutionNote })
-    window.setTimeout(onSuccess, 900)
+    try {
+      await updateStatus.mutateAsync({ status: 'Resolved', resolutionNote })
+      window.setTimeout(onSuccess, 900)
+    } catch {
+      // Surfaced to the user via updateStatus.isError / updateStatus.error.
+    }
   }
 
   return {
