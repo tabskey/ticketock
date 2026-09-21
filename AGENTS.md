@@ -75,7 +75,7 @@ if you need more context — nothing else.
       server state.
 - [x] **7. Frontend tests** — component/hook tests with Vitest + RTL,
       coverage check ≥ 80%.
-- [ ] **8. E2E** — Cypress specs for: submit a ticket, filter the list,
+- [x] **8. E2E** — Cypress specs for: submit a ticket, filter the list,
       walk a ticket through its full status workflow.
       _If you need the E2E rationale:_ `docs/adr/0004-e2e-testing.md`.
 - [ ] **9. CI** — `.github/workflows/ci.yml` with the four jobs described

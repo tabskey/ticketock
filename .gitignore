@@ -222,3 +222,8 @@ frontend/coverage/
 npm-debug.log*
 *.tsbuildinfo
 
+# Cypress artifacts
+frontend/cypress/screenshots/
+frontend/cypress/videos/
+frontend/cypress/downloads/
+
