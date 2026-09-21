@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from uuid import uuid4
 
 import bcrypt
 import jwt
@@ -28,7 +29,13 @@ def create_refresh_token(*, subject: str, role: str) -> str:
     expires_at = datetime.now(timezone.utc) + timedelta(
         seconds=settings.refresh_token_expire_seconds
     )
-    payload = {"sub": subject, "role": role, "type": "refresh", "exp": expires_at}
+    payload = {
+        "sub": subject,
+        "role": role,
+        "type": "refresh",
+        "jti": uuid4().hex,
+        "exp": expires_at,
+    }
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=JWT_ALGORITHM)
 
 

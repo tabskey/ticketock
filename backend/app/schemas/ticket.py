@@ -7,7 +7,7 @@ from app.models.enums import TicketCategory, TicketPriority, TicketStatus
 
 class TicketCreate(BaseModel):
     title: str = Field(min_length=1, max_length=255)
-    description: str = Field(min_length=1)
+    description: str = Field(min_length=1, max_length=10_000)
     category: TicketCategory
     priority: TicketPriority
 

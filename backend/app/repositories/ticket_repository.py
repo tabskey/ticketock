@@ -36,6 +36,17 @@ def get_by_id(db: Session, ticket_id: int) -> Ticket | None:
     return db.get(Ticket, ticket_id)
 
 
+def update_status(
+    db: Session, ticket_id: int, *, expected: TicketStatus, new: TicketStatus
+) -> bool:
+    rows_updated = (
+        db.query(Ticket)
+        .filter(Ticket.id == ticket_id, Ticket.status == expected)
+        .update({Ticket.status: new}, synchronize_session=False)
+    )
+    return rows_updated == 1
+
+
 def list_tickets(
     db: Session,
     *,

@@ -33,7 +33,13 @@ def get_current_user(
     except jwt.PyJWTError as exc:
         raise UnauthorizedError("Invalid or expired token.") from exc
 
-    user = user_repository.get_by_id(db, int(payload["sub"]))
+    subject = payload.get("sub")
+    try:
+        user_id = int(subject)
+    except (TypeError, ValueError) as exc:
+        raise UnauthorizedError("Invalid or expired token.") from exc
+
+    user = user_repository.get_by_id(db, user_id)
     if user is None:
         raise UnauthorizedError("Invalid or expired token.")
     return user

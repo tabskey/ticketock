@@ -113,7 +113,12 @@ def change_status(
         note_to_store = trimmed_note
 
     previous_status = ticket.status
-    ticket.status = new_status
+    if not ticket_repository.update_status(
+        db, ticket_id, expected=previous_status, new=new_status
+    ):
+        raise InvalidStatusTransitionError(
+            "The ticket status changed concurrently; please retry."
+        )
     status_history_repository.create(
         db,
         ticket_id=ticket.id,

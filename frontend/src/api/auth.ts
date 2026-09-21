@@ -9,5 +9,14 @@ export function refreshSession(refreshToken: string): Promise<TokenResponse> {
   return apiRequest<TokenResponse>('/auth/refresh', {
     method: 'POST',
     body: { refresh_token: refreshToken },
+    skipAuthRetry: true,
+  })
+}
+
+export function logout(refreshToken: string): Promise<void> {
+  return apiRequest<void>('/auth/logout', {
+    method: 'POST',
+    body: { refresh_token: refreshToken },
+    skipAuthRetry: true,
   })
 }

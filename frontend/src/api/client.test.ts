@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ApiError, apiRequest, setAuthToken } from './client'
+import { ApiError, apiRequest, setAuthHandlers, setAuthToken } from './client'
 
 function mockFetchOnce(status: number, body: unknown) {
   vi.stubGlobal(
@@ -15,6 +15,7 @@ function mockFetchOnce(status: number, body: unknown) {
 describe('apiRequest', () => {
   beforeEach(() => {
     setAuthToken(null)
+    setAuthHandlers(null)
   })
 
   afterEach(() => {
@@ -88,5 +89,71 @@ describe('apiRequest', () => {
     const error = new ApiError({ code: 'TICKET_NOT_FOUND', message: 'Not found', status: 404 })
     expect(error).toBeInstanceOf(Error)
     expect(error.message).toBe('Not found')
+  })
+
+  it('refreshes once and retries the request after a 401', async () => {
+    setAuthToken('expired-token')
+    const refresh = vi.fn().mockResolvedValue('fresh-token')
+    const onUnauthorized = vi.fn()
+    setAuthHandlers({ refresh, onUnauthorized })
+
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        status: 401,
+        ok: false,
+        json: () =>
+          Promise.resolve({ error: { code: 'UNAUTHORIZED', message: 'expired', status: 401 } }),
+      })
+      .mockResolvedValueOnce({ status: 200, ok: true, json: () => Promise.resolve({ id: 1 }) })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await apiRequest('/tickets/1')
+
+    expect(result).toEqual({ id: 1 })
+    expect(refresh).toHaveBeenCalledTimes(1)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    const [, retryInit] = fetchMock.mock.calls[1]
+    expect(retryInit.headers.Authorization).toBe('Bearer fresh-token')
+  })
+
+  it('signs the user out via onUnauthorized when the refresh cannot recover a 401', async () => {
+    setAuthToken('expired-token')
+    const refresh = vi.fn().mockResolvedValue(null)
+    const onUnauthorized = vi.fn()
+    setAuthHandlers({ refresh, onUnauthorized })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        status: 401,
+        ok: false,
+        json: () =>
+          Promise.resolve({ error: { code: 'UNAUTHORIZED', message: 'nope', status: 401 } }),
+      }),
+    )
+
+    await expect(apiRequest('/tickets')).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+    expect(onUnauthorized).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not attempt recovery when skipAuthRetry is set', async () => {
+    const refresh = vi.fn()
+    const onUnauthorized = vi.fn()
+    setAuthHandlers({ refresh, onUnauthorized })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        status: 401,
+        ok: false,
+        json: () =>
+          Promise.resolve({ error: { code: 'UNAUTHORIZED', message: 'nope', status: 401 } }),
+      }),
+    )
+
+    await expect(
+      apiRequest('/auth/refresh', { method: 'POST', body: {}, skipAuthRetry: true }),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+    expect(refresh).not.toHaveBeenCalled()
+    expect(onUnauthorized).not.toHaveBeenCalled()
   })
 })

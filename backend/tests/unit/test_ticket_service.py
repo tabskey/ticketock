@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import text
 
 from app.core.errors import (
     InvalidStatusTransitionError,
@@ -8,6 +9,7 @@ from app.core.errors import (
 from app.models.enums import TicketCategory, TicketPriority, TicketStatus, UserRole
 from app.models.ticket import Ticket
 from app.models.user import User
+from app.repositories import ticket_repository
 from app.services import ticket_service
 from app.services.ticket_service import is_valid_transition
 
@@ -240,3 +242,62 @@ def test_list_tickets_scoping(db_session, employee_user, support_user):
         page_size=20,
     )
     assert support_total == 2
+
+
+def test_update_status_returns_true_on_expected_match(db_session, employee_user):
+    ticket = ticket_service.create_ticket(
+        db_session,
+        requester=employee_user,
+        title="t",
+        description="d",
+        category=TicketCategory.IT,
+        priority=TicketPriority.HIGH,
+    )
+
+    assert (
+        ticket_repository.update_status(
+            db_session, ticket.id, expected=TicketStatus.OPEN, new=TicketStatus.IN_PROGRESS
+        )
+        is True
+    )
+
+
+def test_update_status_returns_false_on_expected_mismatch(db_session, employee_user):
+    ticket = ticket_service.create_ticket(
+        db_session,
+        requester=employee_user,
+        title="t",
+        description="d",
+        category=TicketCategory.IT,
+        priority=TicketPriority.HIGH,
+    )
+
+    assert (
+        ticket_repository.update_status(
+            db_session,
+            ticket.id,
+            expected=TicketStatus.IN_PROGRESS,
+            new=TicketStatus.RESOLVED,
+        )
+        is False
+    )
+
+
+def test_change_status_rejects_concurrent_conflict(db_session, employee_user, support_user, monkeypatch):
+    ticket = ticket_service.create_ticket(
+        db_session,
+        requester=employee_user,
+        title="t",
+        description="d",
+        category=TicketCategory.IT,
+        priority=TicketPriority.HIGH,
+    )
+
+    db_session.execute(
+        text("UPDATE tickets SET status = 'In Progress' WHERE id = :id"), {"id": ticket.id}
+    )
+    stale_ticket = Ticket(id=ticket.id, status=TicketStatus.OPEN, created_by=ticket.created_by)
+    monkeypatch.setattr(ticket_repository, "get_by_id", lambda db, ticket_id: stale_ticket)
+
+    with pytest.raises(InvalidStatusTransitionError):
+        ticket_service.change_status(db_session, ticket.id, support_user, TicketStatus.IN_PROGRESS)

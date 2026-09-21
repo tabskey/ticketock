@@ -3,9 +3,12 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from './AuthContext'
-import { refreshSession } from '../api/auth'
+import { logout, refreshSession } from '../api/auth'
 
-vi.mock('../api/auth', () => ({ refreshSession: vi.fn() }))
+vi.mock('../api/auth', () => ({
+  refreshSession: vi.fn(),
+  logout: vi.fn().mockResolvedValue(undefined),
+}))
 
 function makeToken(exp: number): string {
   const header = btoa(JSON.stringify({ alg: 'HS256' }))
@@ -104,6 +107,16 @@ describe('AuthProvider', () => {
     expect(screen.getByTestId('auth-state')).toHaveTextContent('signed-out')
     expect(localStorage.getItem('ticketock.auth')).toBeNull()
     expect(sessionStorage.getItem('ticketock.auth')).toBeNull()
+  })
+
+  it('revokes the refresh token on the server when signing out', async () => {
+    const user = userEvent.setup()
+    renderWithProvider()
+
+    await user.click(screen.getByText('sign in (remember)'))
+    await user.click(screen.getByText('sign out'))
+
+    expect(logout).toHaveBeenCalledWith('r1')
   })
 
   it('silently refreshes the token shortly before it expires', async () => {

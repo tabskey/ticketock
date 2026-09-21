@@ -1,7 +1,10 @@
 # ADR 0003: Authentication — JWT with two fixed roles
 
 ## Status
-Accepted
+Accepted. **Superseded on the refresh-token point only by
+[ADR 0006](0006-post-review-hardening.md)** — refresh tokens are back in
+scope and hardened with rotation + server-side revocation. The two-role
+model and the rest of this ADR stand.
 
 ## Context
 The assignment's business rules don't mention authentication at all —
@@ -21,11 +24,12 @@ Add a minimal **JWT-based** auth layer with exactly two roles:
   anyone's ticket), which undercuts the point of the exercise.
 - JWT is stateless, requires no session store, and is the standard,
   expected pattern for a REST API — appropriate weight for the scope.
-- Deliberately **not** building: registration, password reset, refresh
-  tokens, OAuth. All of that is real complexity a production system would
-  need, but none of it changes the reviewer's ability to evaluate the
-  core ticket-management logic, so it's left out and listed under
-  "what I'd improve with more time."
+- Deliberately **not** building: registration, password reset, OAuth. All
+  of that is real complexity a production system would need, but none of it
+  changes the reviewer's ability to evaluate the core ticket-management
+  logic, so it's left out and listed under "what I'd improve with more
+  time." (Refresh tokens were originally excluded here too; see
+  [ADR 0006](0006-post-review-hardening.md) for why that was revisited.)
 
 ## Alternatives considered
 - **No auth**: simplest, but makes "employee" vs "support" a purely

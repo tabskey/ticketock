@@ -174,9 +174,13 @@ Open → In Progress → Resolved → Closed
 ```
 
 One step at a time, no skipping, no going backward. Any other transition
-raises `INVALID_STATUS_TRANSITION` (422). This rule is the single most
-important piece of business logic in the system and is where unit test
-coverage is the strictest.
+raises `INVALID_STATUS_TRANSITION` (422). A transition to `Resolved`
+additionally requires a non-empty `resolution_note`; without it the request
+is rejected with `RESOLUTION_NOTE_REQUIRED` (422). The transition is applied
+with a compare-and-swap `UPDATE ... WHERE status = :expected` (rowcount
+checked), so two concurrent support actions cannot both commit the same
+step. This rule is the single most important piece of business logic in the
+system and is where unit test coverage is the strictest.
 
 ## 5. API contract
 
@@ -185,7 +189,9 @@ Base path: `/api`. All authenticated routes expect
 
 | Method | Path | Role | Purpose |
 |---|---|---|---|
-| POST | `/auth/login` | public | Returns a JWT + role |
+| POST | `/auth/login` | public | Returns an access token + refresh token + role |
+| POST | `/auth/refresh` | public (valid refresh token) | Rotates the refresh token, returns a new pair |
+| POST | `/auth/logout` | public (valid refresh token) | Revokes the refresh token server-side |
 | POST | `/tickets` | employee, support | Create a ticket |
 | GET | `/tickets` | employee (own only), support (all) | List, filter, sort, paginate |
 | GET | `/tickets/{id}` | employee (own only), support | Full detail + status history |
@@ -208,15 +214,20 @@ Query params on `GET /tickets`: `status`, `category`, `priority`,
 ```
 
 A fixed enum of `code` values (`INVALID_STATUS_TRANSITION`,
-`TICKET_NOT_FOUND`, `UNAUTHORIZED`, `VALIDATION_ERROR`, `FORBIDDEN`) lets
-the frontend map errors to user-facing copy without string matching on
-`message`.
+`TICKET_NOT_FOUND`, `UNAUTHORIZED`, `VALIDATION_ERROR`, `FORBIDDEN`,
+`RESOLUTION_NOTE_REQUIRED`, `NOT_FOUND`, `HTTP_ERROR`) lets the frontend map
+errors to user-facing copy without string matching on `message`.
 
 ## 6. Security model
 
 - Passwords hashed with `bcrypt`.
-- JWT signed with `HS256`, short expiry (e.g. 1h); no refresh tokens —
-  out of scope for a prototype of this size.
+- JWT signed with `HS256`. Access tokens are short-lived (1h); a refresh
+  token (30d) is issued alongside at login, persisted server-side and
+  hardened with rotation and server-side revocation — every refresh token
+  carries a `jti`, is revoked when it is rotated, and is revoked on logout
+  (see [ADR 0006](docs/adr/0006-post-review-hardening.md)).
+- `JWT_SECRET_KEY` is required at startup — the app refuses to boot without
+  it, so no environment ever runs on a key committed to git.
 - Two seed users only (`employee@company.com`, `support@company.com`),
   created via an Alembic migration (see [ADR 0002](docs/adr/0002-database.md)),
   not an ad-hoc startup script — the seed is versioned like any other
@@ -233,10 +244,17 @@ the frontend map errors to user-facing copy without string matching on
 | Unit/Integration | Vitest + React Testing Library | components, hooks | ≥ 80% |
 | E2E | Cypress | full user flows (create ticket, filter, change status) against the Dockerized stack | critical paths only |
 
-Coverage is enforced in CI, not just measured — a job fails the pipeline
-if `backend` or `frontend` coverage drops below 80%.
+Coverage gates are configured — `pytest --cov-fail-under=80` on the
+backend and Vitest `coverage.thresholds` on the frontend — and run as part
+of the suites. CI enforcement (a job that fails the pipeline below 80%) is
+described in §8 but not yet built; the gates are currently run manually.
 
 ## 8. CI pipeline (GitHub Actions)
+
+> **Not implemented in this submission** — `AGENTS.md` item 9 is
+> deliberately out of scope. The jobs below describe the intended pipeline
+> (see [ADR 0006](docs/adr/0006-post-review-hardening.md)); running the
+> commands manually is how quality is currently checked.
 
 Parallel jobs on every push/PR:
 
@@ -261,7 +279,7 @@ Coverage thresholds are checked in jobs 1 and 2; the pipeline fails below
 ## 10. What I'd improve with more time
 
 - Configurable categories (DB-backed instead of enum).
-- Refresh tokens / session revocation.
+- A CI pipeline (GitHub Actions) — designed in §8, not yet built.
 - Optimistic UI updates on status change (currently refetch-on-success).
 - Rate limiting on `/auth/login`.
 - Structured logging + request tracing (`correlation-id` header through

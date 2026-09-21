@@ -4,6 +4,7 @@ os.environ["DATABASE_URL"] = os.environ.get(
     "TEST_DATABASE_URL",
     "postgresql+psycopg://ticketock:ticketock@db:5432/ticketock_test",
 )
+os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
 
 from pathlib import Path
 

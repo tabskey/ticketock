@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { apiRequest } from './client'
-import { login, refreshSession } from './auth'
+import { logout, login, refreshSession } from './auth'
 
 vi.mock('./client', () => ({ apiRequest: vi.fn().mockResolvedValue({ token: 't' }) }))
 
@@ -18,6 +18,16 @@ describe('auth api', () => {
     expect(apiRequest).toHaveBeenCalledWith('/auth/refresh', {
       method: 'POST',
       body: { refresh_token: 'rtoken' },
+      skipAuthRetry: true,
+    })
+  })
+
+  it('logout posts the refresh token to /auth/logout', async () => {
+    await logout('rtoken')
+    expect(apiRequest).toHaveBeenCalledWith('/auth/logout', {
+      method: 'POST',
+      body: { refresh_token: 'rtoken' },
+      skipAuthRetry: true,
     })
   })
 })

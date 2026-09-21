@@ -86,3 +86,33 @@ def test_refresh_with_access_token_returns_unauthorized(client):
     response = client.post("/api/auth/refresh", json={"refresh_token": access_token})
     assert response.status_code == 401
     assert response.json()["error"]["code"] == "UNAUTHORIZED"
+
+
+def test_refresh_rotates_the_token(client):
+    login_response = client.post(
+        "/api/auth/login", json={"email": EMPLOYEE_EMAIL, "password": EMPLOYEE_PASSWORD}
+    )
+    original_refresh_token = login_response.json()["refresh_token"]
+
+    refreshed = client.post("/api/auth/refresh", json={"refresh_token": original_refresh_token})
+    assert refreshed.status_code == 200
+    rotated_refresh_token = refreshed.json()["refresh_token"]
+    assert rotated_refresh_token != original_refresh_token
+
+    reused = client.post("/api/auth/refresh", json={"refresh_token": original_refresh_token})
+    assert reused.status_code == 401
+    assert reused.json()["error"]["code"] == "UNAUTHORIZED"
+
+
+def test_logout_revokes_the_refresh_token(client):
+    login_response = client.post(
+        "/api/auth/login", json={"email": EMPLOYEE_EMAIL, "password": EMPLOYEE_PASSWORD}
+    )
+    refresh_token = login_response.json()["refresh_token"]
+
+    logout_response = client.post("/api/auth/logout", json={"refresh_token": refresh_token})
+    assert logout_response.status_code == 204
+
+    reused = client.post("/api/auth/refresh", json={"refresh_token": refresh_token})
+    assert reused.status_code == 401
+    assert reused.json()["error"]["code"] == "UNAUTHORIZED"

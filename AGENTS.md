@@ -32,8 +32,8 @@ Do not re-litigate stack choices — they're closed decisions, recorded in
   routers or ORM models.
 - **Testing**: every new piece of business logic ships with a unit test.
   Every new endpoint ships with an integration test. Coverage must not
-  drop below **80%** on either backend or frontend — this is enforced in
-  CI, not optional.
+  drop below **80%** on either backend or frontend — enforced by the
+  suites' coverage gates, not optional.
 - **No scope creep**: don't add auth flows, roles, or entities beyond
   what `ARCHITECTURE.md` defines without flagging it first.
 
@@ -78,9 +78,10 @@ if you need more context — nothing else.
 - [x] **8. E2E** — Cypress specs for: submit a ticket, filter the list,
       walk a ticket through its full status workflow.
       _If you need the E2E rationale:_ `docs/adr/0004-e2e-testing.md`.
-- [ ] **9. CI** — `.github/workflows/ci.yml` with the four jobs described
-      in `ARCHITECTURE.md` §8.
-- [ ] **10. README** — setup instructions, decisions summary (PT/EN),
+- [ ] ~~**9. CI** — `.github/workflows/ci.yml` with the four jobs described
+      in `ARCHITECTURE.md` §8.~~ **(out of scope for this submission — see
+      [ADR 0006](docs/adr/0006-post-review-hardening.md))**
+- [x] **10. README** — setup instructions, decisions summary (PT/EN),
       trade-offs, assumptions, "what I'd improve" (mirror
       `ARCHITECTURE.md` §9–10, don't duplicate verbatim — link instead).
 
