@@ -11,7 +11,7 @@ export function Pagination({ page, pageSize, total, onPageChange }: PaginationPr
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
   return (
-    <div className="flex items-center justify-between text-[13px] text-brand-text-secondary dark:text-brand-text-muted">
+    <div className="flex flex-wrap items-center justify-between gap-3 text-[13px] text-brand-text-secondary dark:text-brand-text-muted">
       <span>
         Página {page} de {totalPages} ({total} tickets)
       </span>

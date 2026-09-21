@@ -47,7 +47,7 @@ export function NotificationsDropdown({ tickets }: { tickets: Ticket[] }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 mt-2 w-80 rounded-2xl border border-brand-border bg-brand-surface p-2 shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]">
+        <div className="absolute right-0 z-10 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-2xl border border-brand-border bg-brand-surface p-2 shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]">
           <p className="px-2 py-1.5 text-[13px] font-extrabold text-brand-text-dark dark:text-brand-text">Notificações</p>
 
           {tickets.length === 0 ? (

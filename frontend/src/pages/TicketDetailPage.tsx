@@ -46,7 +46,7 @@ export function TicketDetailPage() {
       </Link>
 
       <div className={CARD_CLASSES}>
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-xl font-extrabold text-brand-text-dark dark:text-brand-text">{ticket.title}</h1>
             <p className="mt-1 text-sm font-medium text-brand-text-secondary dark:text-brand-text-muted">

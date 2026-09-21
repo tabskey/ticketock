@@ -10,10 +10,10 @@ export function Layout({ children }: { children: ReactNode }) {
   const { data: user } = useCurrentUser()
 
   return (
-    <div className="flex min-h-screen bg-brand-cream transition-colors dark:bg-brand-surface-dark">
+    <div className="flex min-h-screen flex-col bg-brand-cream transition-colors md:flex-row dark:bg-brand-surface-dark">
       <HomeSidebar user={user} />
 
-      <div className="mx-auto w-full max-w-[900px] px-10 pb-[60px] pt-[30px]">
+      <div className="mx-auto w-full max-w-[900px] px-4 pb-[60px] pt-5 sm:px-6 md:px-10 md:pt-[30px]">
         <div className="mb-6 flex items-center justify-end gap-3">
           <Link
             to="/tickets/new"

@@ -27,11 +27,11 @@ export function HomePage() {
   const { unreadTickets } = useUnreadTickets(user?.id, tickets?.items)
 
   return (
-    <div className="flex min-h-screen bg-brand-cream transition-colors dark:bg-brand-surface-dark">
+    <div className="flex min-h-screen flex-col bg-brand-cream transition-colors md:flex-row dark:bg-brand-surface-dark">
       <HomeSidebar user={user} />
 
-      <div className="mx-auto w-full max-w-[900px] px-10 pb-[60px] pt-[30px]">
-        <div className="mb-4 flex items-center justify-end gap-4">
+      <div className="mx-auto w-full max-w-[900px] px-4 pb-[60px] pt-5 sm:px-6 md:px-10 md:pt-[30px]">
+        <div className="mb-4 flex flex-wrap items-center justify-end gap-3 md:gap-4">
           <button
             type="button"
             onClick={toggleTheme}
@@ -46,9 +46,9 @@ export function HomePage() {
           </span>
         </div>
 
-        <div className="flex items-center justify-between gap-6 rounded-[22px] border border-brand-border bg-brand-surface px-[34px] py-[30px] shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]">
+        <div className="flex items-center justify-between gap-6 rounded-[22px] border border-brand-border bg-brand-surface px-5 py-6 sm:px-[34px] sm:py-[30px] shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]">
           <div className="flex-1">
-            <h1 className="mb-1.5 text-[26px] font-extrabold text-brand-text-dark dark:text-brand-text">
+            <h1 className="mb-1.5 text-[22px] font-extrabold text-brand-text-dark dark:text-brand-text sm:text-[26px]">
               {user ? `Oi, ${user.name}! 👋` : 'Oi! 👋'}
             </h1>
             <p className="mb-5 text-[15px] font-medium text-brand-text-secondary dark:text-brand-text-muted">O que aconteceu hoje?</p>

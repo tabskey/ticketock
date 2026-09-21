@@ -41,7 +41,7 @@ export function Modal({ onClose, labelledBy, children }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={labelledBy}
-        className="w-full max-w-lg rounded-[22px] border border-brand-border bg-brand-surface p-7 shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]"
+        className="max-h-[calc(100vh-2rem)] w-full max-w-lg overflow-y-auto rounded-[22px] border border-brand-border bg-brand-surface p-5 sm:p-7 shadow-[0_1px_2px_rgba(33,29,63,0.05),0_10px_28px_rgba(33,29,63,0.06)] dark:border-brand-border-dark dark:bg-brand-surface-card-dark dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_10px_28px_rgba(0,0,0,0.4)]"
       >
         {children}
       </div>

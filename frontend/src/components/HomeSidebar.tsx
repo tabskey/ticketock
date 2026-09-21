@@ -30,8 +30,8 @@ export function HomeSidebar({ user }: { user: CurrentUser | undefined }) {
   }
 
   return (
-    <div className="sticky top-0 flex h-screen w-[230px] shrink-0 flex-col bg-brand-purple px-[18px] py-[26px] dark:bg-brand-purple-dark">
-      <div className="flex items-center gap-2.5 px-1.5 pb-7 text-[19px] font-extrabold text-brand-text">
+    <div className="flex w-full shrink-0 flex-col gap-3 bg-brand-purple px-[18px] py-4 md:sticky md:top-0 md:h-screen md:w-[230px] md:gap-0 md:py-[26px] dark:bg-brand-purple-dark">
+      <div className="flex items-center gap-2.5 pb-3 text-[19px] font-extrabold text-brand-text md:px-1.5 md:pb-7">
         <img
           src={ticketTockLogoMini}
           alt="TicketTock logo"
@@ -40,7 +40,8 @@ export function HomeSidebar({ user }: { user: CurrentUser | undefined }) {
         TicketTock
       </div>
 
-      <NavLink to="/" end className={({ isActive }) => `${navItemClass(isActive)} mb-1.5`}>
+      <nav className="flex flex-wrap items-center gap-2 md:flex-col md:items-stretch md:gap-0">
+        <NavLink to="/" end className={({ isActive }) => `${navItemClass(isActive)} md:mb-1.5`}>
         <img
           src={ticketTockIconHome}
           alt="Início"
@@ -57,7 +58,9 @@ export function HomeSidebar({ user }: { user: CurrentUser | undefined }) {
         Meus tickets
       </NavLink>
 
-      <div className="mt-auto flex flex-col gap-3 border-t border-white/[0.08] px-1.5 pt-3">
+      </nav>
+
+      <div className="flex flex-wrap items-center gap-3 border-t border-white/[0.08] pt-3 md:mt-auto md:flex-col md:items-stretch md:gap-3 md:px-1.5">
         <div className="flex items-center gap-2.5">
           <div
             aria-label={user?.name ?? 'User avatar'}

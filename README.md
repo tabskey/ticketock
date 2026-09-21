@@ -1,7 +1,7 @@
-🐾 TicketTock
+# 🐾 TicketTock
 
-Todo chamado merece uma patinha amiga.
-Um miado de distância da solução.
+> **Todo chamado merece uma patinha amiga.**
+> *Um miado de distância da solução.*
 
 
 A small full-stack prototype for submitting and managing internal
@@ -25,7 +25,7 @@ and set a real value (`.env` is git-ignored, so it never gets committed):
 
 ```bash
 git clone <repo-url>
-cd support-portal
+cd ticketock
 cp .env.example .env   # then set a real JWT_SECRET_KEY
 docker compose up --build
 ```
@@ -106,10 +106,14 @@ lives in [`ARCHITECTURE.md` §9](ARCHITECTURE.md).
 
 ### What I'd improve with more time
 
-Configurable (DB-backed) categories, a CI pipeline, optimistic UI updates
-on status change, login rate limiting, structured logging, and an audit
-log for ticket edits — the full list lives in
-[`ARCHITECTURE.md` §10](ARCHITECTURE.md).
+A living to-do list, mirrored from [`ARCHITECTURE.md` §10](ARCHITECTURE.md):
+
+- [ ] CI pipeline (GitHub Actions) — designed in §8, not yet built
+- [ ] Configurable, DB-backed ticket categories instead of a fixed enum
+- [ ] Rate limiting on `/auth/login`
+- [ ] Optimistic UI updates on status change (today it refetches on success)
+- [ ] Structured logging + request tracing (`correlation-id` from Nginx to FastAPI)
+- [ ] Soft delete / audit log for ticket edits, not just status changes
 
 ---
 
@@ -126,7 +130,7 @@ commitado):
 
 ```bash
 git clone <repo-url>
-cd support-portal
+cd ticketock
 cp .env.example .env   # depois defina um JWT_SECRET_KEY de verdade
 docker compose up --build
 ```
@@ -184,7 +188,7 @@ os comandos acima rodam manualmente.
 
 - **PostgreSQL em vez de SQLite**: um container a mais, em troca de
   enums nativos e maior fidelidade com um ambiente de deploy real.
-- **JWT com dois papéis fixos, sem cadastro**: suficiente pra garantir
+- **JWT com dois papéis fixos, sem cadastro**: suficiente para garantir
   "funcionário só vê os próprios tickets" sem construir gestão de
   usuários completa, fora do escopo do protótipo.
 - **Seed de dados via migration do Alembic**, não script de startup —
@@ -207,7 +211,11 @@ completa está em [`ARCHITECTURE.md` §9](ARCHITECTURE.md).
 
 ### O que eu melhoraria com mais tempo
 
-Categorias configuráveis (via banco), uma esteira de CI, atualização
-otimista de UI na troca de status, rate limiting no login, logging
-estruturado e log de auditoria para edições de ticket — a lista completa
-está em [`ARCHITECTURE.md` §10](ARCHITECTURE.md).
+Uma lista de afazeres viva, espelhando o [`ARCHITECTURE.md` §10](ARCHITECTURE.md):
+
+- [ ] Esteira de CI (GitHub Actions) — desenhada no §8, ainda não construída
+- [ ] Categorias configuráveis (via banco) em vez de um enum fixo
+- [ ] Rate limiting no `/auth/login`
+- [ ] Atualização otimista de UI na troca de status (hoje refaz o fetch)
+- [ ] Logging estruturado + rastreamento (`correlation-id` do Nginx ao FastAPI)
+- [ ] Soft delete / log de auditoria para edições, não só trocas de status
