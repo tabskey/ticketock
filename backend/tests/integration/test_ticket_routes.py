@@ -179,10 +179,14 @@ def test_support_walks_full_status_workflow(client):
     ticket_id = _create_ticket(client, employee_headers).json()["id"]
 
     for next_status in ("In Progress", "Resolved", "Closed"):
+        body = {"status": next_status}
+        if next_status == "Resolved":
+            body["resolution_note"] = "Replaced the printer cartridge."
+
         response = client.patch(
             f"/api/tickets/{ticket_id}/status",
             headers=support_headers,
-            json={"status": next_status},
+            json=body,
         )
         assert response.status_code == 200
         assert response.json()["status"] == next_status
@@ -195,6 +199,53 @@ def test_support_walks_full_status_workflow(client):
         ("In Progress", "Resolved"),
         ("Resolved", "Closed"),
     ]
+    resolved_entry = next(h for h in detail["history"] if h["to_status"] == "Resolved")
+    assert resolved_entry["resolution_note"] == "Replaced the printer cartridge."
+
+
+def test_resolve_without_note_is_rejected(client):
+    support_headers = auth_headers(client, SUPPORT_EMAIL, SUPPORT_PASSWORD)
+    ticket_id = _create_ticket(client, support_headers).json()["id"]
+    client.patch(f"/api/tickets/{ticket_id}/status", headers=support_headers, json={"status": "In Progress"})
+
+    response = client.patch(
+        f"/api/tickets/{ticket_id}/status", headers=support_headers, json={"status": "Resolved"}
+    )
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "RESOLUTION_NOTE_REQUIRED"
+
+
+def test_resolve_with_blank_note_is_rejected(client):
+    support_headers = auth_headers(client, SUPPORT_EMAIL, SUPPORT_PASSWORD)
+    ticket_id = _create_ticket(client, support_headers).json()["id"]
+    client.patch(f"/api/tickets/{ticket_id}/status", headers=support_headers, json={"status": "In Progress"})
+
+    response = client.patch(
+        f"/api/tickets/{ticket_id}/status",
+        headers=support_headers,
+        json={"status": "Resolved", "resolution_note": "   "},
+    )
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "RESOLUTION_NOTE_REQUIRED"
+
+
+def test_resolve_with_note_is_stored_in_history(client):
+    support_headers = auth_headers(client, SUPPORT_EMAIL, SUPPORT_PASSWORD)
+    ticket_id = _create_ticket(client, support_headers).json()["id"]
+    client.patch(f"/api/tickets/{ticket_id}/status", headers=support_headers, json={"status": "In Progress"})
+
+    response = client.patch(
+        f"/api/tickets/{ticket_id}/status",
+        headers=support_headers,
+        json={"status": "Resolved", "resolution_note": "Reinstalled the driver."},
+    )
+    assert response.status_code == 200
+
+    detail = client.get(f"/api/tickets/{ticket_id}", headers=support_headers).json()
+    resolved_entry = next(h for h in detail["history"] if h["to_status"] == "Resolved")
+    assert resolved_entry["resolution_note"] == "Reinstalled the driver."
+    other_entries = [h for h in detail["history"] if h["to_status"] != "Resolved"]
+    assert all(h["resolution_note"] is None for h in other_entries)
 
 
 def test_support_cannot_skip_a_step(client):

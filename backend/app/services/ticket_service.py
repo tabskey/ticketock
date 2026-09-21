@@ -1,6 +1,10 @@
 from sqlalchemy.orm import Session
 
-from app.core.errors import InvalidStatusTransitionError, TicketNotFoundError
+from app.core.errors import (
+    InvalidStatusTransitionError,
+    MissingResolutionNoteError,
+    TicketNotFoundError,
+)
 from app.models.enums import TicketCategory, TicketPriority, TicketStatus, UserRole
 from app.models.status_history import StatusHistory
 from app.models.ticket import Ticket
@@ -84,7 +88,11 @@ def list_tickets(
 
 
 def change_status(
-    db: Session, ticket_id: int, requester: User, new_status: TicketStatus
+    db: Session,
+    ticket_id: int,
+    requester: User,
+    new_status: TicketStatus,
+    resolution_note: str | None = None,
 ) -> Ticket:
     ticket = ticket_repository.get_by_id(db, ticket_id)
     if ticket is None:
@@ -95,6 +103,15 @@ def change_status(
             f"Cannot move from '{ticket.status.value}' to '{new_status.value}'."
         )
 
+    note_to_store: str | None = None
+    if new_status == TicketStatus.RESOLVED:
+        trimmed_note = (resolution_note or "").strip()
+        if not trimmed_note:
+            raise MissingResolutionNoteError(
+                "A resolution note is required to resolve a ticket."
+            )
+        note_to_store = trimmed_note
+
     previous_status = ticket.status
     ticket.status = new_status
     status_history_repository.create(
@@ -103,6 +120,7 @@ def change_status(
         from_status=previous_status,
         to_status=new_status,
         changed_by=requester.id,
+        resolution_note=note_to_store,
     )
     db.commit()
     db.refresh(ticket)

@@ -11,12 +11,14 @@ def create(
     from_status: TicketStatus | None,
     to_status: TicketStatus,
     changed_by: int,
+    resolution_note: str | None = None,
 ) -> StatusHistory:
     entry = StatusHistory(
         ticket_id=ticket_id,
         from_status=from_status,
         to_status=to_status,
         changed_by=changed_by,
+        resolution_note=resolution_note,
     )
     db.add(entry)
     db.flush()

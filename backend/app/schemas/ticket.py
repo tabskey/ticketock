@@ -34,6 +34,7 @@ class StatusHistoryRead(BaseModel):
     to_status: TicketStatus
     changed_by: int
     changed_at: datetime
+    resolution_note: str | None
 
 
 class TicketDetail(TicketRead):
@@ -42,6 +43,7 @@ class TicketDetail(TicketRead):
 
 class TicketStatusUpdate(BaseModel):
     status: TicketStatus
+    resolution_note: str | None = None
 
 
 class PaginatedTickets(BaseModel):

@@ -25,3 +25,8 @@ class TicketNotFoundError(AppError):
 class InvalidStatusTransitionError(AppError):
     code = "INVALID_STATUS_TRANSITION"
     status_code = 422
+
+
+class MissingResolutionNoteError(AppError):
+    code = "RESOLUTION_NOTE_REQUIRED"
+    status_code = 422

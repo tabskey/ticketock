@@ -6,7 +6,8 @@ export function useUpdateTicketStatus(ticketId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (status: TicketStatus) => updateTicketStatus(ticketId, status),
+    mutationFn: ({ status, resolutionNote }: { status: TicketStatus; resolutionNote?: string }) =>
+      updateTicketStatus(ticketId, status, resolutionNote),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ticket', ticketId] })
       queryClient.invalidateQueries({ queryKey: ['tickets'] })

@@ -12,7 +12,7 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
@@ -46,6 +46,13 @@ def _ensure_database_exists(database_url: str) -> None:
             conn.execute(f'CREATE DATABASE "{url.database}"')
 
 
+def _clear_seeded_example_tickets(database_url: str) -> None:
+    engine = create_engine(database_url)
+    with engine.begin() as connection:
+        connection.execute(text("TRUNCATE TABLE status_history, tickets RESTART IDENTITY CASCADE"))
+    engine.dispose()
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _test_database() -> None:
     _ensure_database_exists(settings.database_url)
@@ -53,6 +60,8 @@ def _test_database() -> None:
     cfg = Config(str(BACKEND_DIR / "alembic.ini"))
     cfg.set_main_option("script_location", str(BACKEND_DIR / "alembic"))
     command.upgrade(cfg, "head")
+
+    _clear_seeded_example_tickets(settings.database_url)
 
 
 @pytest.fixture(scope="session")

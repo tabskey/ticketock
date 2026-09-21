@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTicket } from '../hooks/useTicket'
 import { useUpdateTicketStatus } from '../hooks/useUpdateTicketStatus'
@@ -5,6 +6,7 @@ import { useAuth } from '../auth/AuthContext'
 import { StatusBadge } from '../components/StatusBadge'
 import { PriorityBadge } from '../components/PriorityBadge'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { ResolveTicketModal } from '../components/ResolveTicketModal'
 import { CARD_CLASSES, ERROR_CLASSES, PRIMARY_BUTTON_CLASSES } from '../lib/brandUi'
 import { CATEGORY_LABEL_PT, STATUS_STYLE_PT, formatTicketMeta } from '../lib/ticketBadges'
 import { nextStatus } from '../types/ticket'
@@ -13,6 +15,7 @@ export function TicketDetailPage() {
   const { id } = useParams<{ id: string }>()
   const ticketId = Number(id)
   const { auth } = useAuth()
+  const [isResolveModalOpen, setResolveModalOpen] = useState(false)
 
   const { data: ticket, isLoading, isError, error } = useTicket(ticketId)
   const updateStatus = useUpdateTicketStatus(ticketId)
@@ -23,6 +26,15 @@ export function TicketDetailPage() {
 
   const upcoming = nextStatus(ticket.status)
   const canAdvance = auth?.role === 'support' && upcoming !== null
+
+  function handleAdvanceClick() {
+    if (!upcoming) return
+    if (upcoming === 'Resolved') {
+      setResolveModalOpen(true)
+    } else {
+      updateStatus.mutate({ status: upcoming })
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -51,7 +63,7 @@ export function TicketDetailPage() {
 
         {canAdvance && (
           <div className="mt-6 border-t border-brand-border pt-4 dark:border-brand-border-dark">
-            <button onClick={() => updateStatus.mutate(upcoming)} disabled={updateStatus.isPending} className={PRIMARY_BUTTON_CLASSES}>
+            <button onClick={handleAdvanceClick} disabled={updateStatus.isPending} className={PRIMARY_BUTTON_CLASSES}>
               {updateStatus.isPending ? 'Atualizando…' : `Mover para ${STATUS_STYLE_PT[upcoming].label}`}
             </button>
             {updateStatus.isError && (
@@ -69,16 +81,25 @@ export function TicketDetailPage() {
         </h2>
         <ol className="space-y-3">
           {ticket.history.map((entry) => (
-            <li key={entry.id} className="flex items-center gap-3 text-sm">
-              <span className="text-brand-text-secondary dark:text-brand-text-muted">{formatTicketMeta(entry.changed_at)}</span>
-              <span className="text-brand-text-secondary/70 dark:text-brand-text-muted/70">
-                {entry.from_status ? `${STATUS_STYLE_PT[entry.from_status].label} →` : 'Criado como'}
-              </span>
-              <StatusBadge status={entry.to_status} />
+            <li key={entry.id} className="text-sm">
+              <div className="flex items-center gap-3">
+                <span className="text-brand-text-secondary dark:text-brand-text-muted">{formatTicketMeta(entry.changed_at)}</span>
+                <span className="text-brand-text-secondary/70 dark:text-brand-text-muted/70">
+                  {entry.from_status ? `${STATUS_STYLE_PT[entry.from_status].label} →` : 'Criado como'}
+                </span>
+                <StatusBadge status={entry.to_status} />
+              </div>
+              {entry.resolution_note && (
+                <p className="mt-1 whitespace-pre-wrap pl-1 text-xs italic text-brand-text-secondary dark:text-brand-text-muted">
+                  “{entry.resolution_note}”
+                </p>
+              )}
             </li>
           ))}
         </ol>
       </div>
+
+      {isResolveModalOpen && <ResolveTicketModal ticketId={ticket.id} onClose={() => setResolveModalOpen(false)} />}
     </div>
   )
 }

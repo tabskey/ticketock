@@ -9,6 +9,9 @@ export const LABEL_CLASSES = 'mb-1.5 block text-[13px] font-bold text-brand-text
 export const ERROR_CLASSES =
   'rounded-xl border border-status-danger-bg bg-status-danger-bg px-4 py-3 text-sm text-status-danger-text dark:border-status-danger-bg-dark dark:bg-status-danger-bg-dark dark:text-status-danger-text-dark'
 
+export const SUCCESS_CLASSES =
+  'rounded-xl border border-status-success-bg bg-status-success-bg px-4 py-3 text-sm text-status-success-text dark:border-status-success-bg-dark dark:bg-status-success-bg-dark dark:text-status-success-text-dark'
+
 export const PRIMARY_BUTTON_CLASSES =
   'inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-brand-amber to-brand-amber-soft px-5 py-3 text-[14.5px] font-bold text-brand-ink shadow-[0_10px_22px_rgba(245,166,35,0.3)] transition hover:brightness-105 disabled:opacity-60'
 

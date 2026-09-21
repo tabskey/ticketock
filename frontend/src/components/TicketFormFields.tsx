@@ -1,10 +1,12 @@
 import { ErrorMessage } from './ErrorMessage'
 import { Select } from './Select'
-import { INPUT_CLASSES, LABEL_CLASSES, ERROR_CLASSES, PRIMARY_BUTTON_CLASSES } from '../lib/brandUi'
+import { INPUT_CLASSES, LABEL_CLASSES, ERROR_CLASSES, SUCCESS_CLASSES, PRIMARY_BUTTON_CLASSES } from '../lib/brandUi'
 import { CATEGORY_LABEL_PT, PRIORITY_LABEL_PT } from '../lib/ticketBadges'
 import { TICKET_CATEGORIES, TICKET_PRIORITIES } from '../types/ticket'
 import type { TicketCategory, TicketPriority } from '../types/ticket'
 import type { useTicketForm } from '../hooks/useTicketForm'
+import happyMascot from '../assets/item6_rosto_feliz.png'
+import surprisedMascot from '../assets/item4_rosto_surpreso.png'
 
 interface TicketFormFieldsProps {
   form: ReturnType<typeof useTicketForm>
@@ -76,11 +78,25 @@ export function TicketFormFields({ form, idPrefix, autoFocusTitle }: TicketFormF
         </div>
       </div>
 
-      {createTicket.isError && <ErrorMessage error={createTicket.error} className={ERROR_CLASSES} />}
+      {createTicket.isSuccess ? (
+        <div className={`flex items-center gap-3 ${SUCCESS_CLASSES}`}>
+          <img src={happyMascot} alt="" className="h-9 w-9 flex-none object-contain" />
+          <p className="font-bold">Chamado aberto! Redirecionando…</p>
+        </div>
+      ) : (
+        <>
+          {createTicket.isError && (
+            <div className={`flex items-center gap-3 ${ERROR_CLASSES}`}>
+              <img src={surprisedMascot} alt="" className="h-9 w-9 flex-none object-contain" />
+              <ErrorMessage error={createTicket.error} className="flex-1 text-sm text-status-danger-text dark:text-status-danger-text-dark" />
+            </div>
+          )}
 
-      <button type="submit" disabled={createTicket.isPending} className={`w-full ${PRIMARY_BUTTON_CLASSES}`}>
-        {createTicket.isPending ? 'Enviando…' : 'Abrir chamado'}
-      </button>
+          <button type="submit" disabled={createTicket.isPending} className={`w-full ${PRIMARY_BUTTON_CLASSES}`}>
+            {createTicket.isPending ? 'Enviando…' : 'Abrir chamado'}
+          </button>
+        </>
+      )}
     </form>
   )
 }

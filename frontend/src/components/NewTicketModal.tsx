@@ -19,10 +19,15 @@ export function NewTicketModal({ onClose }: NewTicketModalProps) {
 
   return (
     <Modal onClose={onClose} labelledBy="new-ticket-modal-title">
-      <div className="mb-5 flex items-center justify-between">
-        <h2 id="new-ticket-modal-title" className="text-[19px] font-extrabold text-brand-text-dark dark:text-brand-text">
-          Abrir chamado
-        </h2>
+      <div className="mb-5 flex items-start justify-between">
+        <div>
+          <h2 id="new-ticket-modal-title" className="text-[19px] font-extrabold text-brand-text-dark dark:text-brand-text">
+            Abrir chamado
+          </h2>
+          <p className="mt-1 text-[13px] text-brand-text-secondary dark:text-brand-text-muted">
+            Conta pra gente o que rolou — a gente resolve rapidinho. 🐾
+          </p>
+        </div>
         <button
           type="button"
           onClick={onClose}

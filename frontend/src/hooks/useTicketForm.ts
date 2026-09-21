@@ -19,7 +19,7 @@ export function useTicketForm({ onSuccess }: UseTicketFormOptions) {
   async function handleSubmit(event: FormEvent): Promise<void> {
     event.preventDefault()
     const ticket = await createTicket.mutateAsync({ title, description, category, priority })
-    onSuccess(ticket)
+    window.setTimeout(() => onSuccess(ticket), 900)
   }
 
   return {

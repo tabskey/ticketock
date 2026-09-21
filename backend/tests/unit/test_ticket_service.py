@@ -1,6 +1,10 @@
 import pytest
 
-from app.core.errors import InvalidStatusTransitionError, TicketNotFoundError
+from app.core.errors import (
+    InvalidStatusTransitionError,
+    MissingResolutionNoteError,
+    TicketNotFoundError,
+)
 from app.models.enums import TicketCategory, TicketPriority, TicketStatus, UserRole
 from app.models.ticket import Ticket
 from app.models.user import User
@@ -134,6 +138,62 @@ def test_change_status_rejects_backward(db_session, employee_user, support_user)
 def test_change_status_not_found(db_session, support_user):
     with pytest.raises(TicketNotFoundError):
         ticket_service.change_status(db_session, 999999, support_user, TicketStatus.IN_PROGRESS)
+
+
+@pytest.mark.parametrize("resolution_note", [None, "", "   "])
+def test_change_status_resolved_requires_note(db_session, employee_user, support_user, resolution_note):
+    ticket = ticket_service.create_ticket(
+        db_session,
+        requester=employee_user,
+        title="t",
+        description="d",
+        category=TicketCategory.IT,
+        priority=TicketPriority.HIGH,
+    )
+    ticket_service.change_status(db_session, ticket.id, support_user, TicketStatus.IN_PROGRESS)
+
+    with pytest.raises(MissingResolutionNoteError):
+        ticket_service.change_status(
+            db_session, ticket.id, support_user, TicketStatus.RESOLVED, resolution_note=resolution_note
+        )
+
+
+def test_change_status_resolved_persists_trimmed_note(db_session, employee_user, support_user):
+    ticket = ticket_service.create_ticket(
+        db_session,
+        requester=employee_user,
+        title="t",
+        description="d",
+        category=TicketCategory.IT,
+        priority=TicketPriority.HIGH,
+    )
+    ticket_service.change_status(db_session, ticket.id, support_user, TicketStatus.IN_PROGRESS)
+
+    ticket_service.change_status(
+        db_session,
+        ticket.id,
+        support_user,
+        TicketStatus.RESOLVED,
+        resolution_note="  Replaced the network cable.  ",
+    )
+
+    history = ticket_service.get_ticket_history(db_session, ticket.id, support_user)
+    resolved_entry = next(entry for entry in history if entry.to_status == TicketStatus.RESOLVED)
+    assert resolved_entry.resolution_note == "Replaced the network cable."
+
+
+def test_change_status_skip_to_resolved_rejected_before_note_check(db_session, employee_user, support_user):
+    ticket = ticket_service.create_ticket(
+        db_session,
+        requester=employee_user,
+        title="t",
+        description="d",
+        category=TicketCategory.IT,
+        priority=TicketPriority.HIGH,
+    )
+
+    with pytest.raises(InvalidStatusTransitionError):
+        ticket_service.change_status(db_session, ticket.id, support_user, TicketStatus.RESOLVED)
 
 
 def test_list_tickets_scoping(db_session, employee_user, support_user):

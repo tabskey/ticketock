@@ -22,6 +22,7 @@ export interface StatusHistoryEntry {
   to_status: TicketStatus
   changed_by: number
   changed_at: string
+  resolution_note: string | null
 }
 
 export interface TicketDetail extends Ticket {

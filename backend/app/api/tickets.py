@@ -88,5 +88,7 @@ def update_ticket_status(
     db: Session = Depends(get_db),
     requester: User = Depends(require_role(UserRole.SUPPORT)),
 ) -> TicketRead:
-    ticket = ticket_service.change_status(db, ticket_id, requester, payload.status)
+    ticket = ticket_service.change_status(
+        db, ticket_id, requester, payload.status, resolution_note=payload.resolution_note
+    )
     return TicketRead.model_validate(ticket)

@@ -15,7 +15,12 @@ export function NewTicketPage() {
         ← Voltar aos tickets
       </Link>
 
-      <h1 className="text-xl font-extrabold text-brand-text-dark dark:text-brand-text">Abrir chamado</h1>
+      <div>
+        <h1 className="text-xl font-extrabold text-brand-text-dark dark:text-brand-text">Abrir chamado</h1>
+        <p className="mt-1 text-sm text-brand-text-secondary dark:text-brand-text-muted">
+          Conta pra gente o que rolou — a gente resolve rapidinho. 🐾
+        </p>
+      </div>
 
       <div className={CARD_CLASSES}>
         <TicketFormFields form={form} idPrefix="page" />
